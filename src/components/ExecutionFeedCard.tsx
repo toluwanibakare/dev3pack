@@ -15,6 +15,7 @@ interface ExecutionFeedCardProps {
   onAmountChange: (val: string) => void;
   analysis: AnalysisResult | null;
   onExecuted?: () => void;
+  onReceipt?: (receipt: ReceiptLogItem) => void;
 }
 
 export function ExecutionFeedCard({
@@ -24,6 +25,7 @@ export function ExecutionFeedCard({
   onAmountChange,
   analysis,
   onExecuted,
+  onReceipt,
 }: ExecutionFeedCardProps) {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
@@ -42,6 +44,7 @@ export function ExecutionFeedCard({
 
   async function logReceipt(item: ReceiptLogItem) {
     setReceipts((prev) => [item, ...prev]);
+    onReceipt?.(item);
     fetch("/api/receipts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -98,11 +101,13 @@ export function ExecutionFeedCard({
   }
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-[#111118] p-6">
+    <section className="relative rounded-2xl border border-white/10 bg-[#0b0c12]/90 p-6 backdrop-blur-xl transition hover:border-white/20">
+      <span aria-hidden className="pointer-events-none absolute left-0 top-0 h-2.5 w-2.5 border-l border-t border-[#9945FF]/70" />
+      <span aria-hidden className="pointer-events-none absolute right-0 top-0 h-2.5 w-2.5 border-r border-t border-[#9945FF]/70" />
       <div className="mb-4 flex items-center gap-2">
         <Send className="h-4 w-4 text-[#9945FF]" />
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-300">
-          3. Guarded Execution &amp; Receipts
+        <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-300">
+          [ 03 ] Execution &amp; Receipts
         </h2>
       </div>
 

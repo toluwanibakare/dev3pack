@@ -282,6 +282,15 @@ body {
   outline-offset: 2px;
 }
 
+@keyframes sv-loadbar {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { AppLoader } from "@/components/motion/AppLoader";
 import "./globals.css";
 
 const inter = localFont({
@@ -71,6 +72,7 @@ export default function RootLayout({
         <noscript>
           <style>{`.reveal{opacity:1 !important;transform:none !important}`}</style>
         </noscript>
+        <AppLoader />
         {children}
       </body>
     </html>

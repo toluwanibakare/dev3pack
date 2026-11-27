@@ -9,6 +9,11 @@
 .cursor/
 .vscode/
 
+# Local planning docs (kept out of the public repo)
+IDEAS.md
+TASKS.md
+HANDOVER.md
+
 # Node / Next.js
 node_modules/
 .next/

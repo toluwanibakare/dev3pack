@@ -67,12 +67,12 @@ const BARS: BarSpec[] = Array.from({ length: BAR_COUNT }, (_, i) => {
   const yTop = lerp(0.18, -0.78, Math.pow(distFromCenter, 0.92));
   const yBot = lerp(0.88, -0.22, Math.pow(distFromCenter, 1.05));
 
-  // Deterministic 3D scatter vector for break-apart phase
+  // Deterministic 3D scatter vector for break-apart phase (kept within canvas bounds)
   const angle = (i * 2.39996) % (Math.PI * 2);
-  const spread = 0.55 + ((i * 29) % 10) * 0.08;
-  const scatterX = nx * 0.75 + Math.cos(angle) * spread * 0.65;
-  const scatterY = Math.sin(angle) * spread * 0.6 + (i % 2 === 0 ? -0.18 : 0.18);
-  const scatterZ = ((i % 5) - 2) * 0.42 + Math.cos(angle * 2) * 0.35;
+  const spread = 0.36 + ((i * 29) % 10) * 0.05;
+  const scatterX = nx * 0.42 + Math.cos(angle) * spread * 0.52;
+  const scatterY = Math.sin(angle) * spread * 0.5 + (i % 2 === 0 ? -0.14 : 0.14);
+  const scatterZ = ((i % 5) - 2) * 0.36 + Math.cos(angle * 2) * 0.28;
 
   return {
     index: i,
@@ -89,7 +89,7 @@ const BARS: BarSpec[] = Array.from({ length: BAR_COUNT }, (_, i) => {
   };
 });
 
-export function Hero3DCore() {
+export function Hero3DCore({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const pointerRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
   const cycleOffsetRef = useRef(0);
@@ -122,7 +122,7 @@ export function Hero3DCore() {
       const h = rect.height;
       const cx = w / 2;
       const cy = h / 2;
-      const scale = Math.min(w, h) * 0.34;
+      const scale = Math.min(w, h) * 0.26;
 
       ctx.clearRect(0, 0, w, h);
 
@@ -270,7 +270,10 @@ export function Hero3DCore() {
 
   return (
     <div
-      className="relative mx-auto flex h-[400px] w-full max-w-[540px] items-center justify-center sm:h-[480px] lg:h-[540px]"
+      className={
+        className ||
+        "relative mx-auto flex h-[400px] w-full max-w-[540px] items-center justify-center sm:h-[480px] lg:h-[540px]"
+      }
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         pointerRef.current.targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;

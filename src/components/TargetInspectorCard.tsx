@@ -136,12 +136,14 @@ export function TargetInspectorCard({
   }
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-[#111118] p-6">
+    <section className="relative rounded-2xl border border-white/10 bg-[#0b0c12]/90 p-6 backdrop-blur-xl transition hover:border-white/20">
+      <span aria-hidden className="pointer-events-none absolute left-0 top-0 h-2.5 w-2.5 border-l border-t border-[#00D1FF]/70" />
+      <span aria-hidden className="pointer-events-none absolute right-0 top-0 h-2.5 w-2.5 border-r border-t border-[#00D1FF]/70" />
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Search className="h-4 w-4 text-[#00D1FF]" />
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-300">
-            2. Voice &amp; Target Inspector
+          <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-300">
+            [ 02 ] Voice &amp; Inspector
           </h2>
         </div>
         <button

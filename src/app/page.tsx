@@ -146,6 +146,27 @@ function HeroVisual() {
   return <Hero3DCore />;
 }
 
+function DottedArrowGlyph() {
+  return (
+    <svg aria-hidden viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
+      <circle cx="3" cy="3" r="1.2" />
+      <circle cx="6.5" cy="5.5" r="1.2" />
+      <circle cx="10" cy="8" r="1.35" />
+      <circle cx="6.5" cy="10.5" r="1.2" />
+      <circle cx="3" cy="13" r="1.2" />
+      <circle cx="3" cy="8" r="1.2" />
+    </svg>
+  );
+}
+
+function PointerGlyph() {
+  return (
+    <svg aria-hidden viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 text-[#00D1FF] transition-transform duration-300 group-hover:translate-x-0.5">
+      <path d="M2.5 1.8L13.8 7.6L8.2 9.4L6.1 14.2L2.5 1.8Z" />
+    </svg>
+  );
+}
+
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-slate">
@@ -160,57 +181,98 @@ export default function LandingPage() {
       <SiteNav />
       <ScrollProgress />
 
+      {/* Top Protocol Ticker Ribbon */}
+      <div className="mt-[68px] border-b border-black/20 bg-[#14F195] text-black">
+        <Marquee
+          items={[
+            "ANCHOR POLICYVAULT LIVE ON DEVNET",
+            "ZERO LLM TRUST SPOOFING",
+            "FIRECRAWL WEB INTELLIGENCE",
+            "ELEVENLABS VOICE LOOP",
+            "TRUSTREGISTRY PDA ENFORCED",
+            "DEV3PACK × SOLANA",
+          ].map((item) => (
+            <span
+              key={item}
+              className="inline-flex items-center gap-4 px-5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em]"
+            >
+              <span>{item}</span>
+              <span className="h-1.5 w-1.5 rotate-45 bg-black/70" />
+            </span>
+          ))}
+        />
+      </div>
+
       {/* Hero */}
       <section className="relative overflow-hidden bg-black">
         <Aurora className="opacity-80" />
         <div className="pointer-events-none absolute inset-0 grid-overlay" />
-        <div className="container-wide relative grid items-center gap-14 pb-16 pt-[116px] sm:pb-20 sm:pt-[144px] lg:grid-cols-2 lg:gap-10 lg:pb-28 lg:pt-[160px]">
+
+        {/* Subtle CAD crosshair markers */}
+        <span aria-hidden className="pointer-events-none absolute left-6 top-8 hidden font-mono text-xs text-white/20 lg:block">+</span>
+        <span aria-hidden className="pointer-events-none absolute right-6 top-8 hidden font-mono text-xs text-white/20 lg:block">+</span>
+        <span aria-hidden className="pointer-events-none absolute bottom-8 left-1/2 hidden font-mono text-xs text-[#14F195]/40 lg:block">+</span>
+
+        <div className="container-wide relative grid items-center gap-10 pb-10 pt-6 sm:pb-12 sm:pt-8 lg:grid-cols-2 lg:gap-8 lg:pb-14 lg:pt-10">
           <div>
             <Reveal delay={0}>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-slate">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
                 <span className="h-1.5 w-1.5 rounded-full brand-gradient" />
-                Dev3pack x Solana - Devnet
+                Solana Devnet · Voice Policy Firewall
               </span>
             </Reveal>
 
             <Reveal delay={90}>
-              <h1 className="mt-6 font-display text-[44px] font-extrabold leading-[0.98] tracking-tight text-white sm:text-6xl lg:text-[86px]">
-                Speak. Verify.
+              <h1 className="mt-4 font-display text-[44px] leading-[0.94] tracking-tight text-white sm:text-6xl lg:text-[78px]">
+                <span className="font-light text-white/90">SPEAK.</span>
                 <br />
-                <span className="brand-gradient-text">Execute.</span>
+                <span className="relative my-1.5 inline-block border border-[#14F195]/85 bg-[#14F195]/10 px-3 py-1 font-extrabold text-[#14F195] shadow-[0_0_32px_rgba(20,241,149,0.16)]">
+                  <span className="absolute -left-1 -top-1 h-2 w-2 bg-[#14F195]" />
+                  <span className="absolute -right-1 -top-1 h-2 w-2 bg-[#14F195]" />
+                  <span className="absolute -bottom-1 -left-1 h-2 w-2 bg-[#14F195]" />
+                  <span className="absolute -bottom-1 -right-1 h-2 w-2 bg-[#14F195]" />
+                  VERIFY.
+                </span>{" "}
+                <span className="font-extrabold text-white">EXECUTE.</span>
               </h1>
             </Reveal>
 
             <Reveal delay={170}>
-              <p className="mt-6 max-w-xl text-[16px] leading-relaxed text-slate sm:text-[18px]">
+              <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-slate sm:text-[16px]">
               A safety lock for sending crypto on Solana. An agent checks the
               live project site and the wallet&apos;s on-chain history, then an
               Anchor program enforces your spend and trust rules before a single
               lamport moves.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-4">
               <Link
                 href="/dashboard"
-                className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-cloud"
+                className="group inline-flex items-center gap-3 rounded-full bg-[#14F195] py-2 pl-2 pr-6 text-[14px] font-bold text-black shadow-[0_0_30px_rgba(20,241,149,0.28)] transition duration-300 hover:-translate-y-0.5 hover:brightness-110"
               >
-                Start speaking
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-white">
-                  <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-[#14F195] transition-transform duration-300 group-hover:scale-105">
+                  <DottedArrowGlyph />
                 </span>
+                Start Speaking
               </Link>
               <a
                 href="https://github.com/toluwanibakare/dev3pack/blob/main/README.md"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-cloud transition hover:border-white/30 hover:bg-white/10"
+                className="group inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 font-mono text-[12px] font-semibold uppercase tracking-wider text-cloud transition duration-300 hover:-translate-y-0.5 hover:border-[#00D1FF]/50 hover:text-white"
               >
-                Read the README
+                <PointerGlyph />
+                Read Docs
               </a>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] text-slate">
-              <span className="inline-flex items-center gap-1.5">
+            {/* Corner-bracket trust metadata strip */}
+            <div className="relative mt-6 inline-flex flex-wrap items-center gap-x-5 gap-y-2 border-y border-white/10 px-4 py-2.5 font-mono text-[11px] text-slate">
+              <span aria-hidden className="absolute left-0 top-0 h-2 w-2 border-l border-t border-[#14F195]" />
+              <span aria-hidden className="absolute right-0 top-0 h-2 w-2 border-r border-t border-[#14F195]" />
+              <span aria-hidden className="absolute bottom-0 left-0 h-2 w-2 border-b border-l border-[#14F195]" />
+              <span aria-hidden className="absolute bottom-0 right-0 h-2 w-2 border-b border-r border-[#14F195]" />
+              <span className="inline-flex items-center gap-1.5 text-cloud/90">
                 <ShieldCheck className="h-3.5 w-3.5 text-mint" />
                 Anchor-enforced
               </span>
@@ -220,7 +282,7 @@ export default function LandingPage() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-purple" />
-                Real devnet transactions
+                Real devnet txs
               </span>
             </div>
             </Reveal>
@@ -250,33 +312,47 @@ export default function LandingPage() {
       </section>
 
       {/* Stats */}
-      <section id="product" className="border-t border-white/5 bg-black">
-        <div className="container-wide py-24 sm:py-32">
+      <section id="product" className="relative border-t border-white/10 bg-black">
+        <div className="pointer-events-none absolute inset-0 grid-overlay opacity-50" />
+        <div className="container-wide relative py-20 sm:py-28">
           <Reveal>
             <div className="mb-10 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
               <div>
-                <Eyebrow>Product signal</Eyebrow>
-                <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                  The guardrail, in numbers.
+                <div className="mb-3 flex items-center gap-3">
+                  <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[#14F195]">
+                    ■ 01 <span className="text-slate/60">// 05</span>
+                  </span>
+                  <Eyebrow>Product signal</Eyebrow>
+                </div>
+                <h2 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                  The guardrail, <span className="font-light text-white/80">in numbers.</span>
                 </h2>
               </div>
-              <p className="max-w-xs text-[12px] leading-relaxed text-slate">
+              <p className="max-w-xs font-mono text-[11px] leading-relaxed text-slate">
                 Illustrative devnet preview. Live counts read from the deployed
-                program once the app is connected.
+                program once connected.
               </p>
             </div>
           </Reveal>
 
           <Reveal delay={80}>
-            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 md:grid-cols-3 lg:grid-cols-6">
-              {STATS.map((stat) => (
-                <div key={stat.label} className="bg-black p-5">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate">
-                    {stat.label}
+            <div className="relative grid grid-cols-2 gap-px overflow-hidden border border-white/10 bg-white/10 md:grid-cols-3 lg:grid-cols-6">
+              <span aria-hidden className="pointer-events-none absolute left-0 top-0 z-10 h-2.5 w-2.5 border-l border-t border-[#14F195]" />
+              <span aria-hidden className="pointer-events-none absolute right-0 top-0 z-10 h-2.5 w-2.5 border-r border-t border-[#14F195]" />
+              <span aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-10 h-2.5 w-2.5 border-b border-l border-[#14F195]" />
+              <span aria-hidden className="pointer-events-none absolute bottom-0 right-0 z-10 h-2.5 w-2.5 border-b border-r border-[#14F195]" />
+              {STATS.map((stat, idx) => (
+                <div
+                  key={stat.label}
+                  className="group bg-black p-5 transition duration-300 hover:bg-[#0b0f14]"
+                >
+                  <p className="flex items-center justify-between font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-slate">
+                    <span>{stat.label}</span>
+                    <span className="text-slate/40 group-hover:text-[#14F195]">0{idx + 1}</span>
                   </p>
-                  <p className="mt-2 font-display text-2xl font-extrabold tracking-tight text-white">
+                  <p className="mt-2.5 font-display text-2xl font-extrabold tracking-tight text-white">
                     {typeof stat.value === "string" ? (
-                      <span className="font-mono text-lg">{stat.value}</span>
+                      <span className="font-mono text-lg text-[#14F195]">{stat.value}</span>
                     ) : (
                       <CountUp
                         value={stat.value}
@@ -293,38 +369,63 @@ export default function LandingPage() {
       </section>
 
       {/* Terminal */}
-      <section className="border-t border-white/5 bg-black">
-        <div className="container-wide py-24 sm:py-32">
+      <section className="relative border-t border-white/10 bg-black">
+        <div className="container-wide py-20 sm:py-28">
           <Reveal direction="left">
             <div className="mb-10 max-w-2xl">
-              <Eyebrow>What is happening</Eyebrow>
-              <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                A live feed of guarded actions.
+              <div className="mb-3 flex items-center gap-3">
+                <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[#14F195]">
+                  ■ 02 <span className="text-slate/60">// 05</span>
+                </span>
+                <Eyebrow>What is happening</Eyebrow>
+              </div>
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                A live feed of <span className="font-light text-white/80">guarded actions.</span>
               </h2>
             </div>
           </Reveal>
           <Reveal direction="scale" delay={100}>
-            <TerminalFeed />
+            <div className="relative">
+              <span aria-hidden className="pointer-events-none -left-1 -top-1 absolute z-10 h-3 w-3 border-l border-t border-[#00D1FF]" />
+              <span aria-hidden className="pointer-events-none -right-1 -top-1 absolute z-10 h-3 w-3 border-r border-t border-[#00D1FF]" />
+              <span aria-hidden className="pointer-events-none -bottom-1 -left-1 absolute z-10 h-3 w-3 border-b border-l border-[#00D1FF]" />
+              <span aria-hidden className="pointer-events-none -bottom-1 -right-1 absolute z-10 h-3 w-3 border-b border-r border-[#00D1FF]" />
+              <TerminalFeed />
+            </div>
           </Reveal>
         </div>
       </section>
 
       {/* How it works */}
-      <section id="how" className="border-t border-white/5 bg-black">
-        <div className="container-wide grid gap-14 py-24 sm:py-32 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <section id="how" className="relative border-t border-white/10 bg-black">
+        <div className="pointer-events-none absolute inset-0 grid-overlay opacity-40" />
+        <div className="container-wide relative grid gap-14 py-20 sm:py-28 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           <Reveal direction="left">
             <div>
-              <Eyebrow>How it works</Eyebrow>
-              <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Three moves.
+              <div className="mb-3 flex items-center gap-3">
+                <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[#14F195]">
+                  ■ 03 <span className="text-slate/60">// 05</span>
+                </span>
+                <Eyebrow>How it works</Eyebrow>
+              </div>
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                <span className="font-light text-white/85">Three moves.</span>
                 <br />
-                <span className="brand-gradient-text">One guardrail.</span>
+                <span className="relative mt-2 inline-block border border-[#00D1FF]/80 bg-[#00D1FF]/10 px-2.5 py-0.5 text-[#00D1FF]">
+                  <span className="absolute -left-1 -top-1 h-1.5 w-1.5 bg-[#00D1FF]" />
+                  <span className="absolute -right-1 -top-1 h-1.5 w-1.5 bg-[#00D1FF]" />
+                  <span className="absolute -bottom-1 -left-1 h-1.5 w-1.5 bg-[#00D1FF]" />
+                  <span className="absolute -bottom-1 -right-1 h-1.5 w-1.5 bg-[#00D1FF]" />
+                  One guardrail.
+                </span>
               </h2>
-              <p className="mt-4 max-w-md text-[15px] leading-relaxed text-slate">
+              <p className="mt-5 max-w-md text-[15px] leading-relaxed text-slate">
                 The agent proposes. The program decides. That order is the whole
                 product, and it is why a blocked payment is a feature working.
               </p>
-              <div className="mt-8 rounded-2xl border border-white/10 bg-panel/50 p-4 transition duration-300 hover:border-mint/30">
+              <div className="relative mt-8 border border-white/10 bg-panel/60 p-4 transition duration-300 hover:border-[#14F195]/40">
+                <span aria-hidden className="absolute left-0 top-0 h-2 w-2 border-l border-t border-[#14F195]" />
+                <span aria-hidden className="absolute bottom-0 right-0 h-2 w-2 border-b border-r border-[#14F195]" />
                 <p className="font-mono text-[11px] leading-relaxed text-slate">
                   <span className="text-mint">$</span> solvox verify --target 8xJk...pQ2f
                   <br />
@@ -342,16 +443,16 @@ export default function LandingPage() {
             <div className="space-y-4">
               {STEPS.map((step, index) => (
                 <Reveal key={step.title} direction="right" delay={index * 110}>
-                  <div className="group relative rounded-2xl border border-white/10 bg-panel/40 p-5 pl-16 transition duration-300 hover:-translate-y-0.5 hover:border-cyan/35 hover:bg-panel/60">
-                    <span className="absolute left-3 top-5 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black text-cyan transition duration-300 group-hover:border-cyan/40 group-hover:shadow-[0_0_16px_rgba(0,209,255,0.25)]">
+                  <div className="group relative rounded-2xl border border-white/10 bg-panel/45 p-5 pl-16 transition duration-300 hover:-translate-y-0.5 hover:border-[#14F195]/40 hover:bg-panel/70">
+                    <span className="absolute left-3 top-5 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black text-[#14F195] transition duration-300 group-hover:border-[#14F195]/50 group-hover:shadow-[0_0_16px_rgba(20,241,149,0.25)]">
                       <step.icon className="h-4 w-4" />
                     </span>
                     <div className="flex items-center justify-between">
                       <h3 className="font-display text-[17px] font-bold tracking-tight text-white">
                         {step.title}
                       </h3>
-                      <span className="font-mono text-[11px] text-slate/60">
-                        0{index + 1}
+                      <span className="font-mono text-[11px] text-[#14F195]/80">
+                        [ 0{index + 1} ]
                       </span>
                     </div>
                     <p className="mt-2 text-[13px] leading-relaxed text-slate">
@@ -366,15 +467,26 @@ export default function LandingPage() {
       </section>
 
       {/* Trust grades */}
-      <section id="trust" className="border-t border-white/5 bg-black">
-        <div className="container-wide grid gap-12 py-24 sm:py-32 lg:grid-cols-2 lg:items-center">
+      <section id="trust" className="relative border-t border-white/10 bg-black">
+        <div className="container-wide grid gap-12 py-20 sm:py-28 lg:grid-cols-2 lg:items-center">
           <Reveal direction="left">
             <div>
-              <Eyebrow>Trust grades</Eyebrow>
-              <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                The model proposes.
+              <div className="mb-3 flex items-center gap-3">
+                <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[#14F195]">
+                  ■ 04 <span className="text-slate/60">// 05</span>
+                </span>
+                <Eyebrow>Trust grades</Eyebrow>
+              </div>
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                <span className="font-light text-white/85">The model proposes.</span>
                 <br />
-                <span className="brand-gradient-text">The program decides.</span>
+                <span className="relative mt-2 inline-block border border-[#14F195]/85 bg-[#14F195]/10 px-2.5 py-0.5 text-[#14F195]">
+                  <span className="absolute -left-1 -top-1 h-1.5 w-1.5 bg-[#14F195]" />
+                  <span className="absolute -right-1 -top-1 h-1.5 w-1.5 bg-[#14F195]" />
+                  <span className="absolute -bottom-1 -left-1 h-1.5 w-1.5 bg-[#14F195]" />
+                  <span className="absolute -bottom-1 -right-1 h-1.5 w-1.5 bg-[#14F195]" />
+                  The program decides.
+                </span>
               </h2>
               <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-slate">
                 A grade is written to an on-chain account by the attestor. The vault
@@ -451,13 +563,19 @@ export default function LandingPage() {
       </section>
 
       {/* Developers / community */}
-      <section id="developers" className="border-t border-white/5 bg-black">
-        <div className="container-wide py-24 sm:py-32">
+      <section id="developers" className="relative border-t border-white/10 bg-black">
+        <div className="pointer-events-none absolute inset-0 grid-overlay opacity-40" />
+        <div className="container-wide relative py-20 sm:py-28">
           <Reveal direction="left">
             <div className="mb-12 max-w-2xl">
-              <Eyebrow>Built for developers</Eyebrow>
-              <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Every sponsor tool does real work.
+              <div className="mb-3 flex items-center gap-3">
+                <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[#14F195]">
+                  ■ 05 <span className="text-slate/60">// 05</span>
+                </span>
+                <Eyebrow>Built for developers</Eyebrow>
+              </div>
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                Every sponsor tool <span className="font-light text-white/80">does real work.</span>
               </h2>
               <p className="mt-3 text-[15px] leading-relaxed text-slate">
                 No bolt-ons. Each piece is required by the core loop, so the demo
@@ -469,10 +587,15 @@ export default function LandingPage() {
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {COMMUNITY.map((card, index) => (
               <Reveal key={card.title} delay={index * 70}>
-                <div className="group glow-hover h-full rounded-3xl border border-white/10 bg-panel/50 p-6 transition duration-300 hover:-translate-y-1.5 hover:border-cyan/35">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black text-cyan transition duration-300 group-hover:border-cyan/40 group-hover:shadow-[0_0_16px_rgba(0,209,255,0.25)]">
-                    <card.icon className="h-5 w-5" />
-                  </span>
+                <div className="group glow-hover relative h-full rounded-2xl border border-white/10 bg-panel/50 p-6 transition duration-300 hover:-translate-y-1.5 hover:border-[#14F195]/40">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black text-cyan transition duration-300 group-hover:border-[#14F195]/40 group-hover:text-[#14F195] group-hover:shadow-[0_0_16px_rgba(20,241,149,0.22)]">
+                      <card.icon className="h-5 w-5" />
+                    </span>
+                    <span className="font-mono text-[11px] text-slate/50 group-hover:text-[#14F195]">
+                      [ 0{index + 1} ]
+                    </span>
+                  </div>
                   <h3 className="mt-5 font-display text-[16px] font-bold tracking-tight text-white">
                     {card.title}
                   </h3>
@@ -487,36 +610,45 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-white/5 bg-black">
-        <div className="container-wide py-24 sm:py-28">
+      <section className="border-t border-white/10 bg-black">
+        <div className="container-wide py-20 sm:py-24">
           <Reveal direction="scale">
-            <div className="rounded-[28px] brand-gradient p-px shadow-[0_0_50px_rgba(153,69,255,0.16)]">
+            <div className="relative rounded-[28px] brand-gradient p-px shadow-[0_0_50px_rgba(20,241,149,0.14)]">
             <div className="relative overflow-hidden rounded-[27px] bg-black px-6 py-16 text-center sm:px-12 sm:py-20">
               <Aurora className="opacity-70" />
+              <span aria-hidden className="pointer-events-none absolute left-6 top-6 font-mono text-xs text-white/25">+</span>
+              <span aria-hidden className="pointer-events-none absolute right-6 top-6 font-mono text-xs text-white/25">+</span>
+              <span aria-hidden className="pointer-events-none absolute bottom-6 left-6 font-mono text-xs text-white/25">+</span>
+              <span aria-hidden className="pointer-events-none absolute bottom-6 right-6 font-mono text-xs text-white/25">+</span>
               <div className="relative">
-                <h2 className="mx-auto max-w-2xl font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
-                  Stop sending blind.
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-[#14F195]">
+                  Ready on Devnet
+                </span>
+                <h2 className="mx-auto mt-4 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+                  <span className="font-light text-white/85">Stop sending</span> blind.
                 </h2>
                 <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-slate">
                   Set your rules once, then let the program hold the line. Try it
                   on Solana devnet.
                 </p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                   <Link
                     href="/dashboard"
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-cloud"
+                    className="group inline-flex items-center gap-3 rounded-full bg-[#14F195] py-2 pl-2 pr-6 text-[14px] font-bold text-black shadow-[0_0_30px_rgba(20,241,149,0.28)] transition duration-300 hover:-translate-y-0.5 hover:brightness-110"
                   >
-                    Launch the app
-                    <ArrowRight className="h-4 w-4" />
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-[#14F195] transition-transform duration-300 group-hover:scale-105">
+                      <DottedArrowGlyph />
+                    </span>
+                    Launch the App
                   </Link>
                   <a
                     href="https://github.com/toluwanibakare/dev3pack"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-cloud transition hover:border-white/30 hover:bg-white/10"
+                    className="group inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 font-mono text-[12px] font-semibold uppercase tracking-wider text-cloud transition duration-300 hover:-translate-y-0.5 hover:border-[#00D1FF]/50 hover:text-white"
                   >
-                    <Code2 className="h-4 w-4" />
-                    View source
+                    <PointerGlyph />
+                    View Source
                   </a>
                 </div>
               </div>
