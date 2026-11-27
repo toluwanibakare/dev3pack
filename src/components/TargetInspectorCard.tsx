@@ -8,6 +8,34 @@ import { explorerTxUrl, gradeToLabel, truncateAddress } from "@/lib/constants";
 import { fetchTrustEntry } from "@/lib/program";
 import { AnalysisResult, TrustEntryData } from "@/lib/types";
 
+// --- Seeded Devnet Demo Targets (run scripts/seed-devnet-targets.ts to regenerate) ---
+const DEMO_TARGETS = [
+  {
+    label: "Wallet A",
+    badge: "Grade A",
+    badgeColor: "text-[#14F195] bg-[#14F195]/10 border-[#14F195]/30",
+    wallet: "6wS2Qcfb18w1Jy2MWFYnKHNQ7psyxfm42rNCR1pF4ZR4",
+    url: "https://jup.ag",
+    hint: "Clean wallet · expect pass",
+  },
+  {
+    label: "Wallet B",
+    badge: "Grade F",
+    badgeColor: "text-red-400 bg-red-500/10 border-red-500/30",
+    wallet: "CLF8oPDSQ9FawHSeUAdxjTWLDChfAuqqKeAQAbxyv4Bg",
+    url: "https://solpepe-airdrop.fake",
+    hint: "Wash-loop scammer · expect block",
+  },
+  {
+    label: "Wallet C",
+    badge: "Over-limit",
+    badgeColor: "text-amber-400 bg-amber-500/10 border-amber-500/30",
+    wallet: "AGcqmp1Y8iiFEfeRxxXFKvX2LCsj83hBaika73cZyZyn",
+    url: "https://solana.com",
+    hint: "Safe wallet · set cap low to test DailyLimitExceeded",
+  },
+] as const;
+
 interface TargetInspectorCardProps {
   targetWallet: string;
   projectUrl: string;
@@ -166,7 +194,37 @@ export function TargetInspectorCard({
         </div>
       )}
 
-      <form onSubmit={handleAnalyze} className="space-y-3">
+            {/* Demo Targets quick-fill bar */}
+      <div className="mb-3 space-y-1.5">
+        <span className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+          Demo Targets
+        </span>
+        <div className="flex flex-col gap-1.5">
+          {DEMO_TARGETS.map((demo) => (
+            <button
+              key={demo.label}
+              type="button"
+              title={demo.hint}
+              onClick={() => onTargetChange(demo.wallet, demo.url)}
+              className="flex w-full items-center justify-between gap-2 rounded-xl border border-white/[0.07] bg-white/[0.03] px-3 py-2 text-left transition hover:border-white/20 hover:bg-white/[0.06] active:scale-[0.98]"
+            >
+              <div className="min-w-0">
+                <span className="block font-mono text-[10px] text-zinc-400 truncate">
+                  {demo.wallet.slice(0, 16)}…
+                </span>
+                <span className="block text-[10px] text-zinc-500 truncate">{demo.url}</span>
+              </div>
+              <span
+                className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold ${demo.badgeColor}`}
+              >
+                {demo.badge}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+<form onSubmit={handleAnalyze} className="space-y-3">
         <div>
           <label className="mb-1 block text-xs font-medium text-zinc-400">
             Recipient Wallet (Devnet)

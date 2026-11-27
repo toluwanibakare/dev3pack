@@ -24,7 +24,7 @@ function toReceiptLogItem(r: ActionReceipt) {
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const vaultOwner = searchParams.get("vaultOwner");
+    const vaultOwner = searchParams.get("vaultOwner") || searchParams.get("vault_owner");
     const rows = await getActionReceipts(vaultOwner);
     return NextResponse.json({ receipts: rows.map(toReceiptLogItem) });
   } catch (error: unknown) {
