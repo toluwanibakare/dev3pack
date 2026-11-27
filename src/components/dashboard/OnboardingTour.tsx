@@ -126,8 +126,9 @@ export function OnboardingTour() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: `${step.title}. ${step.body}` }),
         });
-        if (!res.ok) {
-          setVoiceHint("Voice guide will activate once ElevenLabs /api/voice/speak is wired.");
+        const contentType = res.headers.get("content-type") || "";
+        if (!res.ok || !contentType.includes("audio")) {
+          setVoiceHint("Voice guide requires ELEVENLABS_API_KEY in .env.");
           setSpeaking(false);
           return;
         }

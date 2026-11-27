@@ -126,7 +126,8 @@ export function TargetInspectorCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
       });
-      if (!res.ok) return;
+      const contentType = res.headers.get("content-type") || "";
+      if (!res.ok || !contentType.includes("audio")) return;
       const blob = await res.blob();
       const audio = new Audio(URL.createObjectURL(blob));
       await audio.play();

@@ -75,6 +75,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       id: savedReport.id,
+      reportId: savedReport.id,
       wallet: walletStr,
       projectUrl,
       grade: report.grade,

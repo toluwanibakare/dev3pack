@@ -48,7 +48,11 @@ export function ExecutionFeedCard({
     fetch("/api/receipts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(item),
+      body: JSON.stringify({
+        ...item,
+        vaultOwner: publicKey?.toBase58(),
+        reportId: analysis?.reportId,
+      }),
     }).catch(() => {});
   }
 
