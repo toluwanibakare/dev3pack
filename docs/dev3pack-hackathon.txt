@@ -1,0 +1,413 @@
+D E V 3 PA C K X S O L A N A - G L O B A L O N L I N E H A C K AT H O N
+
+
+
+Dev3pack Hackathon
+Tracks, Prizes and Rules
+The complete details from the hackathon dashboard sweep: every global track, every local
+track, all prizes, qualification rules, rejection rules, the schedule, and what a submission must
+contain.
+
+
+   At a glance: Co-hosted by Solana and Dev3pack. Global and fully online, with no in-person
+   requirement. Hackathon window: Friday 27 November to Tuesday 01 December 2026. When checked
+   on Friday 27 November 2026 at about 06:26 WAT, 3,158 global hackers had joined and the countdown
+   showed about 2 days left until submissions close.
+
+
+Perks and bootcamp
+   $2,500+ in perks to claim per student, plus 1 accelerator for under-represented talents.
+   The pre-hackathon Solana Rust Bootcamp ran Monday 23 to Thursday 26 November, 15:00 to 16:00
+   Africa/Lagos each day: Product Ideation with Deepesh; "Vibecode your first app on Solana" with
+   Santiago; "Enable micro-payments with x402" with Fabian; "Best tips for your first hackathon" with
+   Solene.
+   Bootcamp is free and optional, in English, Spanish or Turkish.
+
+Dashboard
+Dashboard: https://app.dev3pack.xyz/hackathon/member/dashboard
+Prizes page: https://app.dev3pack.xyz/hackathon/member/dashboard/prizes
+Submit project: https://app.dev3pack.xyz/hackathon/member/dashboard/project
+
+
+   Deadline conflict, read this first: The schedule shows the submission window closing Sunday 29
+   November, 06:00 to 08:00 Africa/Lagos. The FAQ on the same page says Sunday, November 29th at
+   11:59 PM EST. The dashboard does not reconcile the two. Treat Sunday 06:00 WAT as the real
+   deadline and submit before it.
+
+
+
+
+Dev3pack Hackathon - Tracks, Prizes and Rules                                                 Dev3pack Hackathon
+Prize summary at a glance
+
+ #         Track                                             Prize                              Sponsor
+
+ 1         Best App Overall on Solana                        $5,000                             Solana
+
+ 2         Best DeFi App on Solana                           $250 prize pool                    Solana
+
+ 3         Best Agentic App on Solana                        $250 prize pool                    Solana
+
+ 4         Best Solana app using Firecrawl                   $1,197 per team member             Firecrawl
+
+ 5         Best Solana app built with ElevenLabs             $897 per team member               ElevenLabs
+
+ 6         Best Solana app powered by Pollar                 $500                               Pollar
+
+ 7         Best Solana game using Byte                       $500 total: $300 / $100 / $100     Byte
+
+ 8         Best Seeker Mobile App                            $500 per team member               Solana Mobile
+
+ 9         Best Solana app using Supabase                    $100 per team member, in           Supabase
+                                                             credits
+
+No single total prize pool figure is stated on the pages checked. The figures above are the per-track amounts exactly as
+shown. Per-member prizes mean team size matters: a full team of 4 earns more in total on the Firecrawl, ElevenLabs,
+Solana Mobile and Supabase tracks.
+
+
+Local tracks, summary
+
+ Local track                                       Prize                           Note
+
+ Coco Wallet - Venezuela                           $300 USDC: $150 / $100 /        Must integrate the Coco Wallet
+                                                   $50                             plugin
+
+ Superteam Vietnam                                 $1,000 USDC, Top 1              -
+
+ Dev3pack Local - 15 countries, including          $500 USDC each, Top 1           Full list on the local tracks page
+ Nigeria
+Schedule and deadlines
+
+All times Africa/Lagos, as shown on the dashboard. All events are online.
+
+ When                                           Event
+
+ Fri 27 Nov, 16:00-17:00                        Official Kickoff (Dev3pack)
+
+ Sat 28 Nov, 14:00-16:00                        Feedback and Team Formation Session
+
+ Sun 29 Nov, 06:00-08:00                        Submission Window Closes
+
+ Sun 29 Nov, 16:00-17:00                        Closing Ceremony
+
+ Tue 01 Dec, 14:00-16:00                        Demo Day: top projects present live
+
+
+FAQ answer, quoted as displayed: "The submission deadline is Sunday, November 29th at 11:59 PM EST."
+This conflicts with the schedule window above. Plan for the earlier time.
+
+
+
+
+Dev3pack Hackathon - Tracks, Prizes and Rules                                         Dev3pack Hackathon
+Overall rules
+
+   Team size: maximum 4 members. Teams are formed in the dashboard, and a join code is shown there.
+   Multiple tracks: one project may apply to several tracks, but the same project cannot win twice.
+   Open source is mandatory: "Yes, your project must be open source. Projects that are not open source
+   will not be considered for prizes."
+   Starting early is allowed: you may use your own previously created projects, but ideally the project
+   should be new or at least significantly improved during the hackathon.
+   AI tools are allowed: "Yes, you can use AI tools like Cursor, Claude, ChatGPT, or v0 to build your
+   project. The best projects use AI tools to ship faster."
+   AI credits: an FAQ titled "How do I claim my AI credits?" exists on the overview page. The Resources
+   page lists the tools covered later in this document, and an "Use AI credits" link.
+   Sponsor tools must be core: on every sponsor track, the tool has to power a core feature of the app,
+   not a side feature or bolt-on, and the open-source README must explain that integration.
+
+How judging works
+
+For the Solana tracks, the prizes page states that judges look for:
+
+   A real, working product with clean UI/UX.
+   Live on-chain transactions that the judges can test.
+   A clear problem and solution.
+   A team of hackers who built it during the hackathon.
+
+Each track below also lists its own judging criteria where the dashboard shows them.
+
+What a submission must contain
+
+The submit project form has 5 steps: 1. Project details, 2. Images, 3. Links and video, 4. Team, 5. Review
+and submit. All fields marked with * are required.
+
+Step 1: Project details
+   Project name (required)
+   Tagline (required, max 60 characters)
+   Description (required)
+   Category (required): DeFi, Consumer, Gaming, AI, Payments, Infrastructure, Education, Social, or Other
+   Track (required): choose from all global and local tracks
+   Project status (required): Prototype, Beta, or Live
+   Programming languages (required)
+   Frameworks (required)
+
+Steps 2 to 5 could not be inspected without completing Step 1, so their exact required fields, such as whether a video or
+live deployment URL is mandatory on the form itself, are not confirmed from the form. The Solana track text does
+require a video demo and a deployed program. Required integrations also depend on the track you enter.
+
+
+Dev3pack Hackathon - Tracks, Prizes and Rules                                                         Dev3pack Hackathon
+Global tracks 1 to 3: Solana
+
+
+ 1. Solana - Best App Overall on Solana
+   $5,000 - Sponsor: Solana
+
+ "This track is for the best app overall on Solana, across all types of applications. Create an open-
+ source app on Solana. You can build whatever you want, from a killer DeFi product, to consumer app,
+ to a game, to a developer tool. Surprise us."
+
+ What to build: a real, usable app on Solana, presented with a video. Judging: innovation, UX,
+ working product, real use case.
+
+ Ideas: DeFi protocol or dashboard; AI x Crypto agent; consumer app (social, marketplace, creator
+ tools); payments app; gaming app; infra or dev tool.
+
+ Qualification requirements:
+
+    Deployed Solana program on mainnet or devnet, built with Anchor or native Rust. If the app
+    genuinely does not need a custom program, for example a wallet or payments app, it must still
+    have a real, working on-chain transaction.
+    The program is used: integrated into the app's core flow and invoked by real users, not just
+    deployed.
+    Wallet support: connect a Solana wallet and interact with the app.
+    Token management: create, mint, transfer and use tokens; manage balances and token
+    operations.
+    Transaction details: show transaction signatures, status, and history inside the app.
+    A video demo must show the app working end-to-end with real on-chain transactions.
+    Open-source repo: README with setup, demo video, and the program ID. The demo must use
+    mainnet or devnet.
+
+ What gets rejected: a demo built entirely with mock data; a program deployed but never called; a
+ template fork with cosmetic changes; a landing page with no working product; a video that only shows
+ slides.
+Global tracks 2 to 3: Solana sub-tracks
+
+
+   2. Solana sub-track - Best DeFi App on Solana
+     $250 prize pool - Sponsor: Solana
+
+   "Build financial applications and protocols that take advantage of Solana's speed, low fees and
+   composability. DeFi apps on Solana can run fully on-chain, with users retaining custody of their
+   funds."
+
+   Ideas: lending and borrowing protocol; DEX or AMM; yield aggregator or vaults; stablecoin or
+   payments; perps or trading; tokenized real-world assets; portfolio or DeFi dashboard.
+
+   Qualification: a real DeFi app (swap, lend, stake, borrow, or something that moves value); a live,
+   deployed contract or program; live transactions (real swaps, deposits, withdrawals on devnet or
+   mainnet); good UX showing balances, positions, and transaction history clearly; a novel idea, not a
+   clone of an existing protocol.
+
+   Judging criteria shown: Real DeFi App; Live Contract; Live Transactions; Clear UX; Novel Idea.
+
+
+
+
+   3. Solana sub-track - Best Agentic App on Solana
+
+     $250 prize pool - Sponsor: Solana
+
+   "Build something where AI and Solana each do real work. The best projects use AI to make on-chain
+   actions easier, faster, or more autonomous, not just a chatbot wrapped around a wallet."
+
+   Ideas: autonomous trading agent; natural-language DeFi assistant; AI-powered portfolio manager;
+   agent that executes multi-step on-chain workflows; AI research agent for Solana tokens; voice-
+   controlled crypto assistant.
+
+   Qualification: real agentic behavior, where the AI takes actions on-chain and does not just answer
+   questions; a live, deployed contract or program; an end-to-end live demo (AI input, on-chain action,
+   visible result); clear UX, so users understand what the agent is doing and why.
+
+   Judging criteria shown: Real Agentic Behavior; Live Contract; End-to-End Live Demo; Clear UX.
+
+
+
+
+Dev3pack Hackathon - Tracks, Prizes and Rules                                               Dev3pack Hackathon
+Global tracks 4 to 6: Firecrawl, ElevenLabs, Pollar
+
+
+  4. Firecrawl (AI) - Best Solana app using Firecrawl
+   $1,197 per team member - Sponsor: Firecrawl
+
+  "Build the best Solana app using Firecrawl. Firecrawl turns the whole internet into clean, LLM-ready
+  data with a single API call: scrape, crawl, search, and extract structured data from any website."
+
+  What to build: a Solana app where Firecrawl powers a core feature, not a side feature. Examples:
+  token research agent that scrapes news and socials; DeFi dashboard that aggregates on-chain and
+  off-chain data; AI agent that monitors the web and acts on-chain.
+
+  Ideas: research agent that scrapes X/Twitter, Discord and news, then summarizes and acts; token or
+  NFT discovery tool powered by web data; DeFi dashboard combining on-chain data with scraped
+  market news; AI agent that reads docs and helps users interact with Solana protocols; social trading
+  app that tracks influencer mentions and token prices.
+
+  Qualification: Firecrawl integrated into the app's core flow (scrape, crawl, search, or extract
+  endpoints); a real Solana app with on-chain functionality; open-source repo with a README
+  explaining the Firecrawl integration. Docs: docs.firecrawl.dev
+Global track 5: ElevenLabs
+
+
+ 5. ElevenLabs (AI) - Best Solana app built with ElevenLabs
+  $897 per team member - Sponsor: ElevenLabs
+
+ "Build the best Solana app with ElevenLabs. Give your app a voice with ElevenLabs' conversational
+ AI, text-to-speech, and voice agents. Voice is the next interface for crypto, make it real."
+
+ What to build: a Solana app where voice is a core interaction, not an add-on. Examples: voice-
+ controlled wallet ("Send 1 SOL to Alice"); AI voice agent that explains DeFi positions; voice-narrated
+ trading assistant.
+
+ Eligible integration paths: Conversational AI (voice agent that talks with users and takes on-chain
+ actions); Text to Speech (narrate transactions, prices, portfolio updates); Speech to Text (voice
+ commands that trigger on-chain actions); Voice Design / Voice Cloning (custom voices for your app or
+ agent).
+
+ Ideas: voice-controlled wallet and payments; AI voice agent for DeFi (explain positions, execute
+ trades); voice-narrated portfolio tracker; voice-first onboarding for new Solana users; voice game or
+ social app on Solana.
+
+ Qualification: ElevenLabs integrated into a core user flow (voice input or output that drives the app);
+ a real Solana app with on-chain functionality; open-source repo with a README explaining the
+ ElevenLabs integration. Docs: elevenlabs.io/docs
+Global track 6: Pollar
+
+
+   6. Pollar (Payments) - Best Solana app powered by Pollar
+     $500 - Sponsor: Pollar
+
+   "Build the best Solana app powered by Pollar. Pollar is a payment infrastructure for Solana that lets
+   you accept payments, subscriptions, and tips in crypto, without the complexity."
+
+   What to build: a Solana app where payments are a core feature. Examples: subscription-based
+   content platform; tipping app for creators; pay-per-use API or tool; marketplace with crypto checkout.
+
+   Eligible integration paths: Payment Links (one-time payments); Subscriptions (recurring payments
+   in crypto); Tipping (users tip creators or each other); Checkout (full checkout flow for products or
+   services).
+
+   Ideas: subscription platform for creators; tipping app for streamers or writers; marketplace with Pollar
+   checkout; pay-per-use tool or API; donation platform for open-source projects.
+
+   Qualification: Pollar integrated into the app's core payment flow; a real Solana app with on-chain
+   functionality; open-source repo with a README explaining the Pollar integration. Docs:
+   docs.pollar.com
+
+
+
+
+Dev3pack Hackathon - Tracks, Prizes and Rules                                                Dev3pack Hackathon
+Global tracks 7 to 9: Byte, Solana Mobile, Supabase
+
+
+ 7. Byte (Gaming) - Best Solana game using Byte
+   $500 total: $300 for 1st, $100 for 2nd, $100 for 3rd - Sponsor: Byte
+
+ "Byte is an AI streamer: a 3D avatar agent that plays games live and narrates every move. Build a
+ game that AI agents can play, plug it into Byte, and Byte becomes its first player, live on stream. No
+ code on our side: you describe the game in one document, and Byte plays it."
+
+ What to build: a playable game on Solana that an AI agent can play through a documented interface.
+
+ Ideas: turn-based strategy game; card game; puzzle game; board game; trading or prediction game;
+ any game with clear rules and state that an agent can read and act on.
+
+ Qualification: the game must be playable and have a clear, documented interface for AI agents
+ (game state, available actions, rules); it must be a real Solana game with on-chain functionality (for
+ example wagers, rewards, NFTs, or on-chain state); open-source repo with a README explaining
+ how Byte and AI agents play the game. Docs: byte.com/docs
+Global track 8: Solana Mobile
+
+
+ 8. Solana Mobile (Consumer) - Best Seeker Mobile App
+   $500 per team member - Sponsor: Solana Mobile
+
+ "Build the best mobile app for Solana Seeker. Solana Mobile's Seeker is the next-generation web3
+ phone, with a built-in wallet, a dApp store, and Seed Vault for secure key storage. Build a mobile-first
+ app that takes advantage of Seeker's hardware and software."
+
+ What to build: a mobile-first app for the Seeker phone. Examples: mobile wallet with Seed Vault;
+ mobile DeFi app; mobile game; mobile social app; mobile payments app.
+
+ Ideas: mobile wallet using Seed Vault and Mobile Wallet Adapter; mobile DeFi app (swap, stake, lend
+ on the go); mobile game with on-chain rewards; mobile social or creator app; mobile payments app
+ (send, receive, tip); any mobile-first app that uses Seeker features.
+
+ Qualification: mobile-first and built for Seeker (use the Solana Mobile SDK, Mobile Wallet Adapter, or
+ Seed Vault); a real Solana app with on-chain functionality; open-source repo with a README
+ explaining the Seeker integration. Docs: docs.solanamobile.com
+
+ What gets rejected: a desktop web app with no mobile experience; a mobile app that does not use
+ any Seeker feature; a landing page with no working product; a video that only shows slides.
+
+
+
+
+ 9. Supabase (Other) - Best Solana app using Supabase
+   $100 per team member, in credits - Sponsor: Supabase
+
+ "Best Solana app using Supabase." No description, ideas list, or qualification section is shown on its
+ prize card; only "Docs" (supabase.com/docs) is listed. The prize is $100 in credits per team member.
+Local tracks
+
+Local tracks are listed on the prizes page as a summary list, not clickable, and no extra description is shown for them.
+
+   Coco Wallet, Venezuela: $300 USDC total, split Top 1 $150 / Top 2 $100 / Top 3 $50. Requirement
+   shown: "Must integrate the Coco Wallet plugin."
+   Superteam Vietnam: $1,000 USDC, Top 1.
+   Dev3pack Local: $500 USDC each, Top 1, for South Africa, Peru, Malaysia (listed as "Superteam
+   Malaysia"), India, Chile, Brazil, Venezuela, Argentina, Turkey, Costa Rica, Nigeria, Kenya, Ecuador,
+   Ghana, and Ethiopia. That is 15 countries at $500 each.
+
+Note: Venezuela appears twice, once under Coco Wallet ($300 split) and once under Dev3pack Local ($500 Top 1).
+
+
+
+
+Dev3pack Hackathon - Tracks, Prizes and Rules                                                          Dev3pack Hackathon
+Resources listed on the dashboard
+
+Solana
+Build On Solana; Solana Docs; Solana Cookbook; Solana Playground; Sol Dev; Solana Stack Exchange.
+
+Agent development
+SendAI, Solana Agent Kit; ElizaOS; Model Context Protocol; LangGraph; Vercel AI SDK.
+
+AI tools
+Cursor; Claude Code; ChatGPT; v0; Supabase; Firebase Studio; Replit; Windsurf. The Resources page also
+carries an "Use AI credits" link.
+
+The dashboard's Community and Explore menus (Projects, Leaderboard, Analytics, Guides, FAQ, Perks) were opened
+in the sweep and contain no additional track or rule details beyond what is in this document.
+
+
+
+Gaps and caveats from the sweep
+
+   The submission form's Steps 2 to 5 (Images, Links and video, Team, Review and submit) could not be
+   inspected without completing Step 1, and no data was entered, so their exact required fields are not
+   confirmed from the form itself. The Solana track text does require a video demo and a deployed program.
+   The deadline is shown two ways on the overview page: the schedule window Sunday 29 November 06:00
+   to 08:00 Africa/Lagos, and the FAQ answer Sunday, November 29th at 11:59 PM EST. The dashboard
+   does not reconcile them.
+   No single total prize pool figure is stated on the pages checked. All prize figures in this document are the
+   per-track amounts exactly as shown.
+   The AI credits FAQ exists on the overview page, but its answer was not expanded in the time available.
+
+
+   The stacking rule to remember: one project can enter several tracks, but it cannot win twice. Every
+   sponsor tool must be a core feature, not a bolt-on, and every track needs a real Solana app with live
+   on-chain transactions, an open-source repo, and a README that explains the integration for that track.
+
+
+
+Source: Dev3pack Hackathon dashboard sweep, Friday 27 November 2026, about 06:26 WAT. Dashboard:
+https://app.dev3pack.xyz/hackathon/member/dashboard
+
+
+
+
+Dev3pack Hackathon - Tracks, Prizes and Rules                                                 Dev3pack Hackathon
+

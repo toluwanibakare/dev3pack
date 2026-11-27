@@ -1,1 +1,30 @@
+# Environment & secrets
 .env
+.env.*
+!.env.example
+
+# Agent skills & local AI configs
+.agents/
+.claude/
+.cursor/
+.vscode/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# Solana / Anchor / Rust
+target/
+.anchor/
+test-ledger/
+**/*.rs.bk
+
+# Logs & OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
