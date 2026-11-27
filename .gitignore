@@ -42,3 +42,4 @@ Thumbs.db
 
 # Large UI research reference PDFs (keep solvox-ui-blend-guide.md tracked)
 docs/solvox-ui-research/screenshots/
+node_modules

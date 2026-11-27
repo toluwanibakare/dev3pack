@@ -19,14 +19,16 @@ export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => null);
 
-    if (!body?.wallet || !body?.projectUrl) {
+    const rawWallet = body?.wallet ?? body?.walletAddress;
+
+    if (!rawWallet || !body?.projectUrl) {
       return NextResponse.json(
-        { error: "Both wallet and projectUrl are required." },
+        { error: "Both wallet (or walletAddress) and projectUrl are required." },
         { status: 400 }
       );
     }
 
-    const walletStr = String(body.wallet).trim();
+    const walletStr = String(rawWallet).trim();
     const projectUrl = String(body.projectUrl).trim();
 
     // Validate Solana address format
