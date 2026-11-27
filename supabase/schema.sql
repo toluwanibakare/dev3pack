@@ -30,3 +30,16 @@ create table if not exists action_receipts (
 
 create index if not exists idx_verification_reports_wallet on verification_reports (wallet);
 create index if not exists idx_action_receipts_owner on action_receipts (vault_owner, created_at desc);
+
+alter table verification_reports enable row level security;
+alter table action_receipts enable row level security;
+
+create policy "Allow public read of verification_reports"
+  on verification_reports for select
+  to anon, authenticated
+  using (true);
+
+create policy "Allow public read of action_receipts"
+  on action_receipts for select
+  to anon, authenticated
+  using (true);
