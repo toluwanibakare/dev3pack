@@ -8,7 +8,7 @@ describe("solvox", () => {
   anchor.setProvider(provider);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const program = anchor.workspace.Solvox as Program<any>;
+  const program = anchor.workspace.solvox as Program<any>;
   const owner = provider.wallet as anchor.Wallet;
   const attestor = owner; // In tests, provider wallet acts as attestor
 

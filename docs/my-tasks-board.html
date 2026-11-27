@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SolVox — My Tasks Workspace Board (Frontend + Web3)</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #111114;
+      --surface-2: #18181b;
+      --border: #27272a;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #10b981;
+      --accent-dim: rgba(16, 185, 129, 0.14);
+      --warn: #f59e0b;
+      --warn-dim: rgba(245, 158, 11, 0.14);
+      --blue: #38bdf8;
+      --blue-dim: rgba(56, 189, 248, 0.14);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      padding: 24px;
+    }
+    .container { max-width: 1320px; margin: 0 auto; }
+    header {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 16px; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 24px;
+    }
+    .title-group h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+    .badge {
+      font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+      background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(16,185,129,0.3);
+    }
+    .subtitle { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+    .stats { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .stat-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 10px 16px; min-width: 150px;
+    }
+    .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .stat-val { font-size: 1.15rem; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+    .progress-wrap { width: 220px; }
+    .progress-bar-bg { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin-top: 6px; }
+    .progress-bar-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.25s ease; }
+    .reset-btn {
+      background: var(--surface-2); color: var(--muted); border: 1px solid var(--border);
+      padding: 8px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer;
+    }
+    .reset-btn:hover { color: var(--text); border-color: #3f3f46; }
+
+    .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    @media (max-width: 980px) { .board { grid-template-columns: 1fr; } }
+
+    .column {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 16px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .col-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    }
+    .col-title { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 8px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-todo { background: var(--blue); }
+    .dot-prog { background: var(--warn); }
+    .dot-done { background: var(--accent); }
+    .col-count { font-size: 0.75rem; color: var(--muted); background: var(--surface-2); padding: 2px 8px; border-radius: 999px; }
+
+    .card {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px; transition: border-color 0.2s ease;
+    }
+    .card:hover { border-color: #3f3f46; }
+    .card.all-done { border-color: rgba(16, 185, 129, 0.45); opacity: 0.9; }
+    .card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .task-id {
+      font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;
+      background: var(--blue-dim); color: var(--blue);
+    }
+    .task-id.warn { background: var(--warn-dim); color: var(--warn); }
+    .task-id.done { background: var(--accent-dim); color: var(--accent); }
+    .est { font-size: 0.72rem; color: var(--muted); }
+    .card h3 { font-size: 0.96rem; font-weight: 600; margin-bottom: 4px; }
+    .meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 10px; }
+    .meta code { background: #09090b; padding: 1px 5px; border-radius: 4px; color: #d4d4d8; font-size: 0.72rem; }
+
+    .checklist { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.82rem; color: #e4e4e7; }
+    .checklist input[type="checkbox"] {
+      margin-top: 3px; width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0;
+    }
+    .checklist label { cursor: pointer; flex: 1; }
+    .checklist li.checked label { text-decoration: line-through; color: var(--muted); }
+    .card-footer {
+      margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border);
+      display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-group">
+        <h1>SolVox — My Workspace Board <span class="badge">Frontend + Web3</span></h1>
+        <p class="subtitle">Dev3pack × Solana Hackathon · Program ID: <code>GQqU...RNjc</code> · Hard Cutoff: Sun Nov 29 @ 06:00 WAT</p>
+      </div>
+      <div class="stats">
+        <div class="stat-box">
+          <div class="stat-label">Remaining Time</div>
+          <div class="stat-val" id="countdown">--h --m</div>
+        </div>
+        <div class="stat-box progress-wrap">
+          <div class="stat-label">Checklist Progress (<span id="done-count">0</span>/<span id="total-count">0</span>)</div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+        </div>
+        <button class="reset-btn" onclick="resetBoard()">Reset Checks</button>
+      </div>
+    </header>
+
+    <div class="board" id="board">
+      <!-- Column 1: Remaining / Integration -->
+      <div class="column" data-col="todo">
+        <div class="col-header">
+          <div class="col-title"><span class="dot dot-todo"></span> Remaining Integration</div>
+          <span class="col-count">2 tasks</span>
+        </div>
+
+        <div class="card" data-task="T-11">
+          <div class="card-top">
+            <span class="task-id warn">T-11 · Frontend (Waiting on APIs)</span>
+            <span class="est">UI Ready</span>
+          </div>
+          <h3>Voice &amp; Target Inspector</h3>
+          <div class="meta">Component: <code>TargetInspectorCard.tsx</code></div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="c-t11-1" checked><label for="c-t11-1">Wire Hold-to-Speak mic → <code>POST /api/voice/transcribe</code></label></li>
+            <li><input type="checkbox" id="c-t11-2" checked><label for="c-t11-2">Wire <code>POST /api/analyze-target</code> (<code>wallet + projectUrl</code>) + <code>TrustEntry</code> check</label></li>
+            <li><input type="checkbox" id="c-t11-3" checked><label for="c-t11-3">Render A–F badge, wash-loop metrics, Firecrawl links, &amp; TTS audio</label></li>
+            <li><input type="checkbox" id="c-t11-4"><label for="c-t11-4">Add quick-select demo presets (Wallet A, SolPepe B, Wallet C) once Ahmad shares addresses</label></li>
+            <li><input type="checkbox" id="c-t11-5"><label for="c-t11-5">Test end-to-end against Olamzy's live API routes</label></li>
+          </ul>
+          <div class="card-footer"><span>Waiting on: T-04, T-06, T-09</span><span>Blocks: T-13</span></div>
+        </div>
+
+        <div class="card" data-task="T-12">
+          <div class="card-top">
+            <span class="task-id warn">T-12 · Frontend + Web3</span>
+            <span class="est">Web3 Wired</span>
+          </div>
+          <h3>Execution &amp; Receipt Feed</h3>
+          <div class="meta">Component: <code>ExecutionFeedCard.tsx</code></div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="c-t12-1" checked><label for="c-t12-1">Call <code>execute_guarded_action(amount, nonce)</code> from Phantom</label></li>
+            <li><input type="checkbox" id="c-t12-2" checked><label for="c-t12-2">Parse Anchor blocks (<code>InsufficientTrustGrade</code> / <code>DailyLimitExceeded</code>)</label></li>
+            <li><input type="checkbox" id="c-t12-3" checked><label for="c-t12-3">Render confirmed <code>ActionReceipt</code> + Solana Explorer tx link</label></li>
+            <li><input type="checkbox" id="c-t12-4"><label for="c-t12-4">Verify live persistence with Olamzy's Supabase <code>/api/receipts</code></label></li>
+          </ul>
+          <div class="card-footer"><span>Waiting on: T-10</span><span>Blocks: T-13, T-14</span></div>
+        </div>
+      </div>
+
+      <!-- Column 2: Team Handoffs & Polish -->
+      <div class="column" data-col="handoffs">
+        <div class="col-header">
+          <div class="col-title"><span class="dot dot-prog"></span> Team Handoffs &amp; Final Push</div>
+          <span class="col-count">2 cards</span>
+        </div>
+
+        <div class="card" data-task="TEAM">
+          <div class="card-top">
+            <span class="task-id">TEAM SYNC</span>
+            <span class="est">Olamzy &amp; Ahmad</span>
+          </div>
+          <h3>Coordination Checklist</h3>
+          <div class="meta">Keep everyone unblocked for Sat 18:00 WAT freeze</div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="c-sync-1" checked><label for="c-sync-1">Share deployed <code>PROGRAM_ID</code> + <code>src/idl/solvox.json</code> with Olamzy</label></li>
+            <li><input type="checkbox" id="c-sync-2"><label for="c-sync-2">Push latest frontend + Web3 changes to <code>origin/main</code></label></li>
+            <li><input type="checkbox" id="c-sync-3"><label for="c-sync-3">Get Wallet A, Wallet B ("SolPepe"), Wallet C addresses from Ahmad</label></li>
+            <li><input type="checkbox" id="c-sync-4"><label for="c-sync-4">Run live Devnet E2E test (Grade F block + Over-limit block + Grade A success)</label></li>
+          </ul>
+          <div class="card-footer"><span>Code freeze: Sat 18:00 WAT</span><span>Submit: &lt; 04:00 WAT</span></div>
+        </div>
+
+        <div class="card" data-task="UI">
+          <div class="card-top">
+            <span class="task-id done">UI POLISH · Done</span>
+            <span class="est">Landing + Nav</span>
+          </div>
+          <h3>Landing Page &amp; Fixed Header</h3>
+          <div class="meta">Files: <code>page.tsx</code>, <code>Hero3DCore.tsx</code>, <code>SiteNav.tsx</code></div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="c-ui-1" checked><label for="c-ui-1">Upgrade hero with interactive 80-facet <code>Hero3DCore</code></label></li>
+            <li><input type="checkbox" id="c-ui-2" checked><label for="c-ui-2">Remove all <code>Sparkles</code>/<code>Zap</code> icons + add global rule</label></li>
+            <li><input type="checkbox" id="c-ui-3" checked><label for="c-ui-3">Make header fixed on landing &amp; dashboard</label></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Column 3: Completed -->
+      <div class="column" data-col="done">
+        <div class="col-header">
+          <div class="col-title"><span class="dot dot-done"></span> Completed Tasks</div>
+          <span class="col-count">4 tasks</span>
+        </div>
+
+        <div class="card all-done" data-task="T-02">
+          <div class="card-top">
+            <span class="task-id done">T-02 · Done</span>
+            <span class="est">Web3</span>
+          </div>
+          <h3>Anchor Program: <code>solvox</code></h3>
+          <div class="meta"><code>programs/solvox/src/lib.rs</code> · 3 PDAs, 6 instructions</div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="c-t02-1" checked><label for="c-t02-1">Write <code>PolicyVault</code>, <code>TrustEntry</code>, <code>ActionReceipt</code> PDAs</label></li>
+            <li><input type="checkbox" id="c-t02-2" checked><label for="c-t02-2">Implement 6 instructions + 7 custom error codes</label></li>
+            <li><input type="checkbox" id="c-t02-3" checked><label for="c-t02-3">Compiled cleanly on Solana Playground</label></li>
+          </ul>
+        </div>
+
+        <div class="card all-done" data-task="T-03">
+          <div class="card-top">
+            <span class="task-id done">T-03 · Done</span>
+            <span class="est">Web3</span>
+          </div>
+          <h3>Deployed to Devnet &amp; IDL Synced</h3>
+          <div class="meta"><code>GQqUyuyVnf9vHG3hzHztPt53nZyRSjnrmjLSmEabRNjc</code></div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="c-t03-1" checked><label for="c-t03-1">Deployed <code>solvox</code> to Solana Devnet</label></li>
+            <li><input type="checkbox" id="c-t03-2" checked><label for="c-t03-2">Updated <code>declare_id!</code>, <code>Anchor.toml</code>, &amp; <code>.env</code></label></li>
+            <li><input type="checkbox" id="c-t03-3" checked><label for="c-t03-3">Saved IDL to <code>src/idl/solvox.json</code> + built <code>src/lib/*</code></label></li>
+          </ul>
+        </div>
+
+        <div class="card all-done" data-task="T-07">
+          <div class="card-top">
+            <span class="task-id done">T-07 · Done</span>
+            <span class="est">Frontend</span>
+          </div>
+          <h3>Modular Structure &amp; Wallet Shell</h3>
+          <div class="meta"><code>src/components/</code>, <code>src/lib/</code>, <code>src/app/dashboard/</code></div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="c-t07-1" checked><label for="c-t07-1">Next.js 15 + Phantom/Solflare Wallet Adapter</label></li>
+            <li><input type="checkbox" id="c-t07-2" checked><label for="c-t07-2">Modular cards + <code>src/lib/pda.ts</code> &amp; <code>src/lib/program.ts</code></label></li>
+          </ul>
+        </div>
+
+        <div class="card all-done" data-task="T-08">
+          <div class="card-top">
+            <span class="task-id done">T-08 · Done</span>
+            <span class="est">Frontend + Web3</span>
+          </div>
+          <h3>Policy Vault Card Wired</h3>
+          <div class="meta"><code>src/components/PolicyVaultCard.tsx</code></div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="c-t08-1" checked><label for="c-t08-1">Live <code>PolicyVault</code> PDA state, balance, &amp; <code>spent_today</code> meter</label></li>
+            <li><input type="checkbox" id="c-t08-2" checked><label for="c-t08-2">Wired <code>initialize_vault</code>, <code>deposit_vault</code>, <code>update_policy</code>, <code>withdraw_vault</code></label></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "solvox_my_tasks_v2";
+    const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]'));
+
+    function saveState() {
+      const state = {};
+      checkboxes.forEach(cb => { state[cb.id] = cb.checked; });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const state = JSON.parse(raw);
+        checkboxes.forEach(cb => {
+          if (typeof state[cb.id] === "boolean") cb.checked = state[cb.id];
+        });
+      } catch {}
+    }
+
+    function updateUI() {
+      let done = 0;
+      checkboxes.forEach(cb => {
+        const li = cb.closest("li");
+        if (cb.checked) { done++; li?.classList.add("checked"); }
+        else { li?.classList.remove("checked"); }
+      });
+
+      document.querySelectorAll(".card[data-task]").forEach(card => {
+        const cbs = Array.from(card.querySelectorAll('input[type="checkbox"]'));
+        const allChecked = cbs.length > 0 && cbs.every(c => c.checked);
+        card.classList.toggle("all-done", allChecked);
+      });
+
+      document.getElementById("done-count").textContent = done;
+      document.getElementById("total-count").textContent = checkboxes.length;
+      document.getElementById("progress-fill").style.width = `${Math.round((done / checkboxes.length) * 100)}%`;
+    }
+
+    function resetBoard() {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    function updateCountdown() {
+      const deadline = new Date("2026-11-29T06:00:00+01:00").getTime();
+      const diff = Math.max(0, deadline - Date.now());
+      const hrs = Math.floor(diff / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      document.getElementById("countdown").textContent = `${hrs}h ${mins}m`;
+    }
+
+    loadState();
+    updateUI();
+    updateCountdown();
+    setInterval(updateCountdown, 30000);
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener("change", () => {
+        saveState();
+        updateUI();
+      });
+    });
+  </script>
+</body>
+</html>

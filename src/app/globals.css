@@ -1,12 +1,305 @@
 @import "tailwindcss";
 @import "@solana/wallet-adapter-react-ui/styles.css";
 
+@theme {
+  --color-void: #0a0a1a;
+  --color-black: #000000;
+  --color-deep: #141432;
+  --color-deep-2: #1b1b3d;
+  --color-panel: #111118;
+  --color-panel-2: #1a1a24;
+  --color-panel-deep: #0b0e0c;
+  --color-purple: #9945ff;
+  --color-cyan: #00d1ff;
+  --color-mint: #14f195;
+  --color-cloud: #f4f6ff;
+  --color-slate: #8a8fa8;
+  --color-muted: #6b7280;
+  --color-amber: #f59e0b;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
 :root {
   color-scheme: dark;
 }
 
+html,
 body {
-  background-color: #09090b;
-  color: #f4f4f5;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--color-void);
+  color: var(--color-cloud);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer utilities {
+  .brand-gradient {
+    background-image: linear-gradient(90deg, #9945ff 0%, #00d1ff 50%, #14f195 100%);
+  }
+
+  .brand-gradient-text {
+    background-image: linear-gradient(90deg, #9945ff 0%, #00d1ff 50%, #14f195 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .ambient {
+    background-image:
+      radial-gradient(900px 420px at 12% -10%, rgba(153, 69, 255, 0.22), transparent 62%),
+      radial-gradient(820px 400px at 88% -14%, rgba(0, 209, 255, 0.16), transparent 62%),
+      radial-gradient(760px 520px at 50% 120%, rgba(20, 241, 149, 0.08), transparent 62%);
+  }
+
+  .grid-overlay {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 0%, black 28%, transparent 72%);
+    mask-image: radial-gradient(ellipse at 50% 0%, black 28%, transparent 72%);
+  }
+
+  .container-wide {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1560px;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-wide {
+      padding-inline: 3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-wide {
+      padding-inline: 5rem;
+    }
+  }
+
+  .reveal {
+    opacity: 0;
+    filter: blur(4px);
+    transition:
+      opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform, filter;
+  }
+
+  .reveal-up {
+    transform: translateY(26px);
+  }
+
+  .reveal-left {
+    transform: translateX(-28px);
+  }
+
+  .reveal-right {
+    transform: translateX(28px);
+  }
+
+  .reveal-scale {
+    transform: scale(0.95);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: sv-marquee 32s linear infinite;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .aurora-layer {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(72px);
+    will-change: transform;
+  }
+
+  .aurora-a {
+    animation: sv-aurora-a 24s ease-in-out infinite;
+  }
+
+  .aurora-b {
+    animation: sv-aurora-b 28s ease-in-out infinite;
+  }
+
+  .blink {
+    animation: sv-blink 1s steps(1) infinite;
+  }
+
+  .skeleton {
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.04) 75%
+    );
+    background-size: 200% 100%;
+    animation: sv-shimmer 1.5s linear infinite;
+  }
+
+  .glow-hover {
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .glow-hover:hover {
+    transform: translateY(-2px);
+    border-color: rgba(153, 69, 255, 0.35);
+    box-shadow: 0 28px 70px -34px rgba(153, 69, 255, 0.55);
+  }
+
+  .hairline {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+@keyframes sv-aurora-a {
+  0%,
+  100% {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, 4%, 0) scale(1.15);
+  }
+}
+
+@keyframes sv-aurora-b {
+  0%,
+  100% {
+    transform: translate3d(4%, 3%, 0) scale(1.1);
+  }
+  50% {
+    transform: translate3d(-6%, -3%, 0) scale(0.95);
+  }
+}
+
+@keyframes sv-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes sv-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes sv-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Wallet adapter UI, aligned to the SolVox brand */
+.wallet-adapter-button {
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--color-deep);
+  color: var(--color-cloud);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0 18px;
+  transition: border-color 0.18s ease, background-color 0.18s ease, filter 0.18s ease;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  background-color: var(--color-deep-2);
+  border-color: rgba(0, 209, 255, 0.5);
+}
+
+.wallet-adapter-button-trigger {
+  border: 0;
+  background-image: linear-gradient(90deg, #9945ff 0%, #00d1ff 62%, #14f195 100%);
+  color: #0a0a1a;
+}
+
+.wallet-adapter-button-trigger:not([disabled]):hover {
+  background-image: linear-gradient(90deg, #9945ff 0%, #00d1ff 62%, #14f195 100%);
+  filter: brightness(1.06);
+}
+
+.wallet-adapter-modal-wrapper {
+  background-color: var(--color-deep);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+}
+
+.wallet-adapter-modal-button-close {
+  background-color: var(--color-deep-2);
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button {
+  background-color: var(--color-void);
+}
+
+:focus-visible {
+  outline: 2px solid rgba(0, 209, 255, 0.7);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
+
+  .aurora-a,
+  .aurora-b,
+  .marquee-track,
+  .skeleton,
+  .blink {
+    animation: none !important;
+  }
+
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }

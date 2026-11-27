@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-solvox = "SoLVoX1111111111111111111111111111111111111"
+solvox = "GQqUyuyVnf9vHG3hzHztPt53nZyRSjnrmjLSmEabRNjc"
 
 [registry]
 url = "https://api.apr.dev"

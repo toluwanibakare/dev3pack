@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 
-declare_id!("SoLVoX1111111111111111111111111111111111111");
+declare_id!("GQqUyuyVnf9vHG3hzHztPt53nZyRSjnrmjLSmEabRNjc");
 
 const SECONDS_PER_DAY: i64 = 86_400;
 
