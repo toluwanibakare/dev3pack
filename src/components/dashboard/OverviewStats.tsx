@@ -101,9 +101,14 @@ export function OverviewStats({
   const remaining = Math.max(0, limit - spent);
   const pct = limit > 0 ? Math.min(100, Math.round((spent / limit) * 100)) : 0;
 
-  const resetAt = new Date();
-  resetAt.setUTCHours(24, 0, 0, 0);
-  const msLeft = resetAt.getTime() - (now?.getTime() ?? resetAt.getTime());
+  const resetTargetMs = vault
+    ? (vault.lastResetTs + 86_400) * 1000
+    : (() => {
+        const d = new Date();
+        d.setUTCHours(24, 0, 0, 0);
+        return d.getTime();
+      })();
+  const msLeft = Math.max(0, resetTargetMs - (now?.getTime() ?? resetTargetMs));
   const hoursLeft = Math.max(0, Math.floor(msLeft / 3_600_000));
   const minsLeft = Math.max(0, Math.floor((msLeft % 3_600_000) / 60_000));
 

@@ -85,28 +85,24 @@ export function PolicyVaultCard({ onVaultChange, refreshTrigger }: PolicyVaultCa
   const spentPct = limitSol > 0 ? Math.min(100, Math.round((spentSol / limitSol) * 100)) : 0;
 
   return (
-    <section className="relative rounded-2xl border border-white/10 bg-[#0b0c12]/90 p-6 backdrop-blur-xl transition hover:border-white/20">
-      <span aria-hidden className="pointer-events-none absolute left-0 top-0 h-2.5 w-2.5 border-l border-t border-[#14F195]/70" />
-      <span aria-hidden className="pointer-events-none absolute right-0 top-0 h-2.5 w-2.5 border-r border-t border-[#14F195]/70" />
+    <section className="flex h-full flex-col rounded-[22px] border border-white/[0.07] bg-[#111119] p-5">
       <div className="mb-4 flex items-center justify-between">
+        <span className="text-[12px] font-medium text-zinc-400">Policy vault</span>
         <div className="flex items-center gap-2">
-          <Shield className="h-4 w-4 text-[#14F195]" />
-          <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-300">
-            [ 01 ] Policy Vault
-          </h2>
+          <button
+            type="button"
+            onClick={loadVault}
+            disabled={!publicKey || loading}
+            className="inline-flex items-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-zinc-400 transition hover:text-white disabled:opacity-40"
+          >
+            <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
+            Sync
+          </button>
+          <Shield className="h-4 w-4 text-zinc-500" />
         </div>
-        <button
-          type="button"
-          onClick={loadVault}
-          disabled={!publicKey || loading}
-          className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-zinc-300 hover:bg-white/10 disabled:opacity-40"
-        >
-          <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
-          Sync
-        </button>
       </div>
 
-      <div className="mb-5 rounded-xl border border-white/10 bg-[#0A0A1A] p-4">
+      <div className="mb-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
         <div className="flex items-center justify-between">
           <span className="text-xs text-zinc-400">Vault Balance</span>
           {vault ? (
@@ -191,29 +187,52 @@ export function PolicyVaultCard({ onVaultChange, refreshTrigger }: PolicyVaultCa
                 )
               )
             }
-            className="w-full rounded-full bg-gradient-to-r from-[#9945FF] via-[#00D1FF] to-[#14F195] px-4 py-2.5 text-xs font-bold text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+            className="mt-1 w-full rounded-full bg-[#14F195] px-4 py-2.5 text-xs font-bold text-black transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {busy === "init" ? "Initializing Vault..." : "Initialize PolicyVault"}
           </button>
         ) : (
           <div className="space-y-2.5 pt-1">
-            <button
-              type="button"
-              disabled={!publicKey || !!busy}
-              onClick={() =>
-                runTx("update", () =>
-                  buildUpdatePolicyIx(
-                    publicKey!,
-                    BigInt(Math.round(Number(dailyLimitSol) * LAMPORTS_PER_SOL)),
-                    GRADE_VALUES[minTrustGrade] ?? 4,
-                    false
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                disabled={!publicKey || !!busy}
+                onClick={() =>
+                  runTx("update", () =>
+                    buildUpdatePolicyIx(
+                      publicKey!,
+                      BigInt(Math.round(Number(dailyLimitSol) * LAMPORTS_PER_SOL)),
+                      GRADE_VALUES[minTrustGrade] ?? 4,
+                      vault.paused
+                    )
                   )
-                )
-              }
-              className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white transition hover:bg-white/10 disabled:opacity-40"
-            >
-              {busy === "update" ? "Updating Policy..." : "Update Policy Rules"}
-            </button>
+                }
+                className="rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/10 disabled:opacity-40"
+              >
+                {busy === "update" ? "Updating..." : "Update Rules"}
+              </button>
+              <button
+                type="button"
+                disabled={!publicKey || !!busy}
+                onClick={() =>
+                  runTx("pause", () =>
+                    buildUpdatePolicyIx(
+                      publicKey!,
+                      vault.dailySpendLimitLamports,
+                      vault.minTrustGrade,
+                      !vault.paused
+                    )
+                  )
+                }
+                className={`rounded-xl border px-3 py-2 text-xs font-semibold transition disabled:opacity-40 ${
+                  vault.paused
+                    ? "border-[#14F195]/40 bg-[#14F195]/15 text-[#14F195]"
+                    : "border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/15"
+                }`}
+              >
+                {busy === "pause" ? "..." : vault.paused ? "Resume Vault" : "Pause Vault"}
+              </button>
+            </div>
 
             <div className="flex gap-2">
               <input

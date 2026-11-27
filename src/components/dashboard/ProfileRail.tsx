@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
 import { gradeToLabel, truncateAddress } from "@/lib/constants";
 import { isProgramConfigured } from "@/lib/program";
@@ -179,6 +180,10 @@ export function ProfileRail({ vault }: { vault: PolicyVaultData | null }) {
         <p className="mt-0.5 text-[11px] text-zinc-500">
           {vault ? `Grade ${grade} policy` : address ? "No policy vault yet" : "Connect to load your vault"}
         </p>
+
+        <div data-tour="wallet-connect" className="user-card-wallet mt-4">
+          <WalletMultiButton />
+        </div>
 
         <div className="mt-4 grid grid-cols-2 gap-2 text-left">
           <div className="rounded-xl bg-white/[0.03] px-3 py-2">

@@ -136,31 +136,27 @@ export function TargetInspectorCard({
   }
 
   return (
-    <section className="relative rounded-2xl border border-white/10 bg-[#0b0c12]/90 p-6 backdrop-blur-xl transition hover:border-white/20">
-      <span aria-hidden className="pointer-events-none absolute left-0 top-0 h-2.5 w-2.5 border-l border-t border-[#00D1FF]/70" />
-      <span aria-hidden className="pointer-events-none absolute right-0 top-0 h-2.5 w-2.5 border-r border-t border-[#00D1FF]/70" />
+    <section className="flex h-full flex-col rounded-[22px] border border-white/[0.07] bg-[#111119] p-5">
       <div className="mb-4 flex items-center justify-between">
+        <span className="text-[12px] font-medium text-zinc-400">Voice &amp; inspector</span>
         <div className="flex items-center gap-2">
-          <Search className="h-4 w-4 text-[#00D1FF]" />
-          <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-300">
-            [ 02 ] Voice &amp; Inspector
-          </h2>
+          <button
+            type="button"
+            onMouseDown={startRecording}
+            onMouseUp={stopRecording}
+            onTouchStart={startRecording}
+            onTouchEnd={stopRecording}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition ${
+              recording
+                ? "border-red-500 bg-red-500/20 text-red-300"
+                : "border-white/[0.08] bg-white/[0.03] text-zinc-300 hover:border-[#00D1FF]/50 hover:text-white"
+            }`}
+          >
+            <Mic className={`h-3 w-3 ${recording ? "animate-pulse text-red-400" : "text-[#00D1FF]"}`} />
+            {recording ? "Release" : "Hold to speak"}
+          </button>
+          <Search className="h-4 w-4 text-zinc-500" />
         </div>
-        <button
-          type="button"
-          onMouseDown={startRecording}
-          onMouseUp={stopRecording}
-          onTouchStart={startRecording}
-          onTouchEnd={stopRecording}
-          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition ${
-            recording
-              ? "border-red-500 bg-red-500/20 text-red-300"
-              : "border-white/15 bg-white/5 text-zinc-200 hover:border-[#00D1FF]/60"
-          }`}
-        >
-          <Mic className={`h-3.5 w-3.5 ${recording ? "animate-pulse text-red-400" : "text-[#00D1FF]"}`} />
-          {recording ? "Release to Send" : "Hold to Speak"}
-        </button>
       </div>
 
       {transcript && (
