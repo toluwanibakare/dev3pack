@@ -1,31 +1,64 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Hero3DCore } from "@/components/motion/Hero3DCore";
 
 /**
  * Branded SolVox launch screen using the 3D V-waveform animation.
- * Plays once per browser session on initial load, then fades out smoothly.
+ * Plays on initial session load and when launching into /dashboard from the landing page.
  */
 export function AppLoader() {
+  const pathname = usePathname();
+  const prevPathRef = useRef<string | null>(null);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [phase, setPhase] = useState<"show" | "fading" | "gone">("show");
+
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  }, []);
+
+  const playSplash = useCallback(
+    (holdMs = 1500, totalMs = 2000) => {
+      clearTimers();
+      setPhase("show");
+      timersRef.current = [
+        setTimeout(() => setPhase("fading"), holdMs),
+        setTimeout(() => setPhase("gone"), totalMs),
+      ];
+    },
+    [clearTimers]
+  );
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const seen = sessionStorage.getItem("solvox_loaded");
-    if (reduced || seen) {
+    const prevPath = prevPathRef.current;
+    prevPathRef.current = pathname;
+
+    if (reduced) {
       setPhase("gone");
       return;
     }
 
-    sessionStorage.setItem("solvox_loaded", "1");
-    const t1 = setTimeout(() => setPhase("fading"), 1500);
-    const t2 = setTimeout(() => setPhase("gone"), 2000);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, []);
+    // Initial load: play once per browser session
+    if (prevPath === null) {
+      const seen = sessionStorage.getItem("solvox_loaded");
+      if (seen) {
+        setPhase("gone");
+        return;
+      }
+      sessionStorage.setItem("solvox_loaded", "1");
+      playSplash(1500, 2000);
+      return clearTimers;
+    }
+
+    // Launching from landing page (/) into /dashboard
+    if (prevPath === "/" && pathname.startsWith("/dashboard")) {
+      playSplash(1000, 1450);
+      return clearTimers;
+    }
+  }, [pathname, playSplash, clearTimers]);
 
   if (phase === "gone") return null;
 
