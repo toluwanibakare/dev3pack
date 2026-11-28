@@ -5,6 +5,7 @@ export type ParsedIntent = {
   amountSol?: number;
   targetAddress?: string;
   projectUrl?: string;
+  demoTarget?: "A" | "B" | "C";
 };
 
 /**
@@ -109,10 +110,21 @@ function parseVoiceIntent(text: string): ParsedIntent {
     projectUrl = urlMatch[0];
   }
 
+  // Match spoken demo target presets (Wallet A / Jupiter, Wallet B / SolPepe, Wallet C)
+  let demoTarget: ParsedIntent["demoTarget"];
+  if (/\b(wallet\s*a|jupiter|jup)\b/i.test(lower)) {
+    demoTarget = "A";
+  } else if (/\b(wallet\s*b|solpepe|sol\s*pepe|scam)\b/i.test(lower)) {
+    demoTarget = "B";
+  } else if (/\b(wallet\s*c|over[\s-]?limit)\b/i.test(lower)) {
+    demoTarget = "C";
+  }
+
   return {
     action,
     amountSol: amountSol ?? 0.25,
     targetAddress,
     projectUrl,
+    demoTarget,
   };
 }

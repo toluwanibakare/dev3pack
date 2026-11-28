@@ -7,6 +7,7 @@ import { CheckCircle2, ExternalLink, Send, ShieldBan } from "lucide-react";
 import { explorerTxUrl, truncateAddress } from "@/lib/constants";
 import { buildExecuteGuardedActionIx, parseSolVoxError } from "@/lib/program";
 import { AnalysisResult, ReceiptLogItem } from "@/lib/types";
+import { speakText } from "@/lib/voice";
 
 interface ExecutionFeedCardProps {
   targetWallet: string;
@@ -14,6 +15,7 @@ interface ExecutionFeedCardProps {
   amountSol: string;
   onAmountChange: (val: string) => void;
   analysis: AnalysisResult | null;
+  executeSignal?: number;
   onExecuted?: () => void;
   onReceipt?: (receipt: ReceiptLogItem) => void;
 }
@@ -24,6 +26,7 @@ export function ExecutionFeedCard({
   amountSol,
   onAmountChange,
   analysis,
+  executeSignal = 0,
   onExecuted,
   onReceipt,
 }: ExecutionFeedCardProps) {
@@ -41,6 +44,13 @@ export function ExecutionFeedCard({
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (executeSignal > 0 && publicKey && targetWallet && !executing) {
+      void handleExecute();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [executeSignal]);
 
   async function logReceipt(item: ReceiptLogItem) {
     setReceipts((prev) => [item, ...prev]);
@@ -86,6 +96,7 @@ export function ExecutionFeedCard({
         txSignature: sig,
         createdAt: new Date().toISOString(),
       });
+      void speakText(`Transfer of ${amountNum} SOL confirmed on Solana Devnet.`);
       onExecuted?.();
     } catch (err) {
       const reason = parseSolVoxError(err);
@@ -99,6 +110,7 @@ export function ExecutionFeedCard({
         errorReason: reason,
         createdAt: new Date().toISOString(),
       });
+      void speakText(`Transaction blocked on Solana. ${reason}`);
     } finally {
       setExecuting(false);
     }

@@ -7,6 +7,7 @@ import { ExternalLink, Mic, Search, ShieldAlert, ShieldCheck, Volume2 } from "lu
 import { explorerTxUrl, gradeToLabel, truncateAddress } from "@/lib/constants";
 import { fetchTrustEntry } from "@/lib/program";
 import { AnalysisResult, TrustEntryData } from "@/lib/types";
+import { speakText } from "@/lib/voice";
 
 // --- Seeded Devnet Demo Targets (run scripts/seed-devnet-targets.ts to regenerate) ---
 const DEMO_TARGETS = [
@@ -42,6 +43,7 @@ interface TargetInspectorCardProps {
   onTargetChange: (wallet: string, url: string) => void;
   onAnalysisComplete: (result: AnalysisResult | null) => void;
   onAmountDetected?: (amountSol: string) => void;
+  onRequestExecute?: () => void;
 }
 
 export function TargetInspectorCard({
@@ -50,10 +52,12 @@ export function TargetInspectorCard({
   onTargetChange,
   onAnalysisComplete,
   onAmountDetected,
+  onRequestExecute,
 }: TargetInspectorCardProps) {
   const { connection } = useConnection();
   const [analyzing, setAnalyzing] = useState(false);
   const [recording, setRecording] = useState(false);
+  const [voiceStage, setVoiceStage] = useState<string | null>(null);
   const [transcript, setTranscript] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [onChainTrust, setOnChainTrust] = useState<TrustEntryData | null>(null);
@@ -72,35 +76,59 @@ export function TargetInspectorCard({
     }
   }
 
-  async function handleAnalyze(e: React.FormEvent) {
-    e.preventDefault();
-    if (!targetWallet || !projectUrl) return;
+  function buildVerdictSpeech(result: AnalysisResult): string {
+    if (result.gradeNumeric >= 4) {
+      return `Verified Trust Grade ${result.grade} with score ${result.score} out of 100. Safe for policy execution.`;
+    }
+    const reason = result.redFlags[0] || "Severe risk indicators detected.";
+    return `Warning. Target graded ${result.grade} with score ${result.score} out of 100. ${reason} Your PolicyVault will block this transfer.`;
+  }
+
+  async function runAnalysis(walletAddr: string, url: string, shouldAutoExecute = false) {
+    if (!walletAddr || !url) return;
     setAnalyzing(true);
     setError(null);
+    setVoiceStage("Inspecting target & attesting grade...");
     try {
       const res = await fetch("/api/analyze-target", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ wallet: targetWallet.trim(), projectUrl: projectUrl.trim() }),
+        body: JSON.stringify({ wallet: walletAddr.trim(), projectUrl: url.trim() }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Analysis failed.");
-        await refreshOnChainTrust(targetWallet.trim());
+        await refreshOnChainTrust(walletAddr.trim());
+        setVoiceStage(null);
         return;
       }
       setAnalysis(data);
       onAnalysisComplete(data);
-      await refreshOnChainTrust(targetWallet.trim());
+      await refreshOnChainTrust(walletAddr.trim());
+
+      setVoiceStage("Speaking verdict...");
+      await speakText(buildVerdictSpeech(data));
+
+      if (shouldAutoExecute) {
+        setVoiceStage("Triggering PolicyVault execution...");
+        onRequestExecute?.();
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Network error");
     } finally {
       setAnalyzing(false);
+      setVoiceStage(null);
     }
+  }
+
+  async function handleAnalyze(e: React.FormEvent) {
+    e.preventDefault();
+    await runAnalysis(targetWallet, projectUrl, false);
   }
 
   async function startRecording() {
     setError(null);
+    setVoiceStage("Listening...");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
@@ -110,6 +138,7 @@ export function TargetInspectorCard({
       };
       recorder.onstop = async () => {
         stream.getTracks().forEach((t) => t.stop());
+        setVoiceStage("Transcribing with ElevenLabs...");
         const blob = new Blob(chunksRef.current, { type: "audio/webm" });
         const form = new FormData();
         form.append("audio", blob, "command.webm");
@@ -118,14 +147,39 @@ export function TargetInspectorCard({
           const data = await res.json();
           if (!res.ok) {
             setError(data.error || "Voice transcription unavailable.");
+            setVoiceStage(null);
             return;
           }
           if (data.transcript) setTranscript(data.transcript);
-          if (data.parsedIntent?.amountSol) {
-            onAmountDetected?.(String(data.parsedIntent.amountSol));
+
+          const intent = data.parsedIntent || {};
+          if (intent.amountSol) {
+            onAmountDetected?.(String(intent.amountSol));
+          }
+
+          let nextWallet = targetWallet;
+          let nextUrl = projectUrl;
+          if (intent.demoTarget) {
+            const idx = intent.demoTarget === "A" ? 0 : intent.demoTarget === "B" ? 1 : 2;
+            nextWallet = DEMO_TARGETS[idx].wallet;
+            nextUrl = DEMO_TARGETS[idx].url;
+          }
+          if (intent.targetAddress) nextWallet = intent.targetAddress;
+          if (intent.projectUrl) nextUrl = intent.projectUrl;
+
+          if (nextWallet !== targetWallet || nextUrl !== projectUrl) {
+            onTargetChange(nextWallet, nextUrl);
+          }
+
+          if (nextWallet && nextUrl) {
+            await runAnalysis(nextWallet, nextUrl, intent.action === "send");
+          } else {
+            setVoiceStage(null);
+            void speakText("Select or paste a target wallet and website URL, then I will inspect and attest it.");
           }
         } catch {
           setError("Voice endpoint unreachable.");
+          setVoiceStage(null);
         }
       };
       mediaRecorderRef.current = recorder;
@@ -133,6 +187,7 @@ export function TargetInspectorCard({
       setRecording(true);
     } catch {
       setError("Microphone permission denied or unavailable.");
+      setVoiceStage(null);
     }
   }
 
@@ -145,23 +200,7 @@ export function TargetInspectorCard({
 
   async function speakVerdict() {
     if (!analysis) return;
-    try {
-      const text = `Target graded ${analysis.grade} with score ${analysis.score} out of 100. ${
-        analysis.redFlags[0] || "No critical red flags detected."
-      }`;
-      const res = await fetch("/api/voice/speak", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-      });
-      const contentType = res.headers.get("content-type") || "";
-      if (!res.ok || !contentType.includes("audio")) return;
-      const blob = await res.blob();
-      const audio = new Audio(URL.createObjectURL(blob));
-      await audio.play();
-    } catch {
-      // Non-blocking TTS fallback
-    }
+    await speakText(buildVerdictSpeech(analysis));
   }
 
   return (
@@ -188,9 +227,14 @@ export function TargetInspectorCard({
         </div>
       </div>
 
-      {transcript && (
-        <div className="mb-3 rounded-xl border border-[#00D1FF]/30 bg-[#00D1FF]/10 px-3 py-2 text-xs text-cyan-200">
-          “{transcript}”
+      {(transcript || voiceStage) && (
+        <div className="mb-3 space-y-1 rounded-xl border border-[#00D1FF]/30 bg-[#00D1FF]/10 px-3 py-2 text-xs text-cyan-200">
+          {transcript && <div>“{transcript}”</div>}
+          {voiceStage && (
+            <div className="font-mono text-[10px] uppercase tracking-wider text-[#14F195]">
+              {voiceStage}
+            </div>
+          )}
         </div>
       )}
 

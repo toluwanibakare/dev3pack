@@ -17,6 +17,7 @@ export default function SolVoxConsolePage() {
   const [amountSol, setAmountSol] = useState("0.25");
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [vaultRefresh, setVaultRefresh] = useState(0);
+  const [executeSignal, setExecuteSignal] = useState(0);
 
   return (
     <div className="relative min-h-screen bg-black text-zinc-100 md:pl-[76px]">
@@ -64,6 +65,7 @@ export default function SolVoxConsolePage() {
                   }}
                   onAnalysisComplete={setAnalysis}
                   onAmountDetected={setAmountSol}
+                  onRequestExecute={() => setExecuteSignal((n) => n + 1)}
                 />
               </div>
 
@@ -74,6 +76,7 @@ export default function SolVoxConsolePage() {
                   amountSol={amountSol}
                   onAmountChange={setAmountSol}
                   analysis={analysis}
+                  executeSignal={executeSignal}
                   onExecuted={() => setVaultRefresh((n) => n + 1)}
                 />
               </div>
