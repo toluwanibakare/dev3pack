@@ -292,7 +292,7 @@ export function OverviewStats({
           </p>
         ) : (
           <div className="divide-y divide-white/[0.06]">
-            {receipts.slice(0, 6).map((r) => {
+            {receipts.slice(0, 4).map((r) => {
               let fallbackHref: string | null = null;
               if (!r.txSignature) {
                 try {
@@ -305,21 +305,23 @@ export function OverviewStats({
               return (
                 <div
                   key={r.id}
-                  className="flex flex-wrap items-center justify-between gap-3 py-2.5 text-xs"
+                  className="flex items-center justify-between gap-4 py-2 text-xs"
                 >
-                  <div className="min-w-0">
-                    <span
-                      className={`mr-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                        r.status === "CONFIRMED"
-                          ? "bg-[#14F195]/15 text-[#14F195]"
-                          : "bg-red-500/15 text-red-400"
-                      }`}
-                    >
-                      {r.status === "CONFIRMED" ? "CONFIRMED" : "BLOCKED"}
-                    </span>
-                    <span className="font-mono text-zinc-300">
-                      {truncateAddress(r.targetWallet)} · Grade {r.grade}
-                    </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`inline-flex shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                          r.status === "CONFIRMED"
+                            ? "bg-[#14F195]/15 text-[#14F195]"
+                            : "bg-red-500/15 text-red-400"
+                        }`}
+                      >
+                        {r.status === "CONFIRMED" ? "CONFIRMED" : "BLOCKED"}
+                      </span>
+                      <span className="truncate font-mono text-zinc-300">
+                        {truncateAddress(r.targetWallet)} · Grade {r.grade}
+                      </span>
+                    </div>
                     {r.errorReason ? (
                       <p className="mt-0.5 truncate text-[11px] text-red-300/90">
                         {r.errorReason}
