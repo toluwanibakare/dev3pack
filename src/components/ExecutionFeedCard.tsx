@@ -35,6 +35,7 @@ export function ExecutionFeedCard({
   const { publicKey, sendTransaction } = useWallet();
 
   const [executing, setExecuting] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [receipts, setReceipts] = useState<ReceiptLogItem[]>([]);
 
   useEffect(() => {
@@ -48,10 +49,9 @@ export function ExecutionFeedCard({
 
   useEffect(() => {
     if (executeSignal > 0 && publicKey && targetWallet && !executing) {
-      void handleExecute();
+      setConfirmOpen(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [executeSignal]);
+  }, [executeSignal, publicKey, targetWallet, executing]);
 
   async function logReceipt(item: ReceiptLogItem) {
     setReceipts((prev) => [item, ...prev]);
@@ -143,15 +143,48 @@ export function ExecutionFeedCard({
           />
         </div>
 
-        <button
-          type="button"
-          onClick={handleExecute}
-          disabled={!publicKey || !targetWallet || executing}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#14F195] px-4 py-2.5 text-xs font-bold text-black transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <Send className="h-3.5 w-3.5" />
-          {executing ? "Executing On-Chain..." : "Execute Guarded Action"}
-        </button>
+        {confirmOpen && publicKey ? (
+          <div className="space-y-2.5 rounded-xl border border-[#14F195]/40 bg-[#14F195]/10 p-3 text-xs">
+            <p className="font-semibold text-white">Approve on-chain execution</p>
+            <p className="font-mono text-[11px] text-zinc-300">
+              Send <span className="text-white">{amountSol} SOL</span> to{" "}
+              <span className="text-white">{truncateAddress(targetWallet.trim())}</span>{" "}
+              (Grade {analysis?.grade || "?"}) · Signer:{" "}
+              <span className="text-[#14F195]">{truncateAddress(publicKey.toBase58())}</span>
+            </p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setConfirmOpen(false);
+                  void handleExecute();
+                }}
+                disabled={executing}
+                className="flex-1 rounded-full bg-[#14F195] px-3 py-2 text-xs font-bold text-black transition hover:brightness-110 disabled:opacity-40"
+              >
+                {executing ? "Signing..." : "Confirm & Sign"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmOpen(false)}
+                disabled={executing}
+                className="rounded-full border border-white/15 px-3 py-2 text-xs font-medium text-zinc-300 transition hover:bg-white/5"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setConfirmOpen(true)}
+            disabled={!publicKey || !targetWallet || executing}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#14F195] px-4 py-2.5 text-xs font-bold text-black transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Send className="h-3.5 w-3.5" />
+            {executing ? "Executing On-Chain..." : "Execute Guarded Action"}
+          </button>
+        )}
       </div>
 
       <div className="space-y-2.5">

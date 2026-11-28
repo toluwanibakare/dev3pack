@@ -329,8 +329,8 @@ export default function LandingPage() {
                 </h2>
               </div>
               <p className="max-w-xs font-mono text-[11px] leading-relaxed text-slate">
-                Illustrative devnet preview. Live counts read from the deployed
-                program once connected.
+                Deployed Anchor program specifications on Solana Devnet. Live
+                receipts and vault state sync in the console.
               </p>
             </div>
           </Reveal>

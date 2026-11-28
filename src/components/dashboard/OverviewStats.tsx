@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Activity, ArrowUpRight, Clock3, ShieldCheck } from "lucide-react";
-import { GRADE_VALUES, gradeToLabel } from "@/lib/constants";
+import { Activity, ArrowUpRight, Clock3, ExternalLink, ShieldCheck } from "lucide-react";
+import { explorerAddressUrl, explorerTxUrl, GRADE_VALUES, gradeToLabel, truncateAddress } from "@/lib/constants";
+import { getTrustEntryPda } from "@/lib/pda";
+import { PublicKey } from "@solana/web3.js";
 import type { AnalysisResult, PolicyVaultData, ReceiptLogItem } from "@/lib/types";
 
 const LAMPORTS = 1_000_000_000;
@@ -278,6 +280,84 @@ export function OverviewStats({
           </div>
         </Card>
       </div>
+
+      <Card>
+        <CardHead
+          title="Recent on-chain receipts (Supabase + Devnet · Native SOL)"
+          icon={<ArrowUpRight className="h-4 w-4" />}
+        />
+        {receipts.length === 0 ? (
+          <p className="text-xs text-zinc-500">
+            No guarded executions recorded yet. Open Guard Console to run a transfer.
+          </p>
+        ) : (
+          <div className="divide-y divide-white/[0.06]">
+            {receipts.slice(0, 6).map((r) => {
+              let fallbackHref: string | null = null;
+              if (!r.txSignature) {
+                try {
+                  const [pda] = getTrustEntryPda(new PublicKey(r.targetWallet));
+                  fallbackHref = explorerAddressUrl(pda.toBase58());
+                } catch {
+                  fallbackHref = null;
+                }
+              }
+              return (
+                <div
+                  key={r.id}
+                  className="flex flex-wrap items-center justify-between gap-3 py-2.5 text-xs"
+                >
+                  <div className="min-w-0">
+                    <span
+                      className={`mr-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                        r.status === "CONFIRMED"
+                          ? "bg-[#14F195]/15 text-[#14F195]"
+                          : "bg-red-500/15 text-red-400"
+                      }`}
+                    >
+                      {r.status === "CONFIRMED" ? "CONFIRMED" : "BLOCKED"}
+                    </span>
+                    <span className="font-mono text-zinc-300">
+                      {truncateAddress(r.targetWallet)} · Grade {r.grade}
+                    </span>
+                    {r.errorReason ? (
+                      <p className="mt-0.5 truncate text-[11px] text-red-300/90">
+                        {r.errorReason}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="font-mono font-semibold text-white">
+                      {r.amountSol} SOL
+                    </span>
+                    {r.txSignature ? (
+                      <a
+                        href={explorerTxUrl(r.txSignature)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 font-mono text-[11px] text-[#14F195] hover:underline"
+                      >
+                        {truncateAddress(r.txSignature, 4)}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    ) : fallbackHref ? (
+                      <a
+                        href={fallbackHref}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 font-mono text-[11px] text-red-300 hover:underline"
+                      >
+                        Trust PDA
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </Card>
     </div>
   );
 }
