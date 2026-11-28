@@ -385,13 +385,13 @@ The suite covers vault initialization and deposit, a Grade F rejection, a daily-
 
 | Route | Method | State | Contract |
 |---|---|---|---|
-| `/api/analyze-target` | `POST` | Interface ready, integration pending | `{ wallet, projectUrl }` to an `AnalysisResult` |
-| `/api/voice/transcribe` | `POST` | Interface ready, integration pending | Audio form data to transcript and intent |
-| `/api/voice/speak` | `POST` | Interface ready, integration pending | Text to an audio stream |
-| `/api/receipts` | `GET` | Live (empty until Supabase is wired) | `{ receipts: ReceiptLogItem[] }` |
-| `/api/receipts` | `POST` | Interface ready, integration pending | Persists a receipt |
+| `/api/analyze-target` | `POST` | Live | `{ wallet, projectUrl }` → `AnalysisResult` + Devnet `set_trust_grade` + Supabase report |
+| `/api/voice/transcribe` | `POST` | Live | ElevenLabs Scribe STT audio form data → transcript & parsed intent |
+| `/api/voice/speak` | `POST` | Live | Text → ElevenLabs `eleven_turbo_v2_5` `audio/mpeg` stream |
+| `/api/receipts` | `GET` | Live | `{ receipts: ReceiptLogItem[] }` from Supabase `action_receipts` |
+| `/api/receipts` | `POST` | Live | Persists a `CONFIRMED` or `BLOCKED_ON_CHAIN` receipt to Supabase |
 
-The UI calls these routes today. Until the backend keys are configured, they return `501` with a clear message, and the dashboard still supports full vault management and on-chain guarded execution for wallets that already have a `TrustEntry`.
+Live deployment: **[https://solvox-app.vercel.app/](https://solvox-app.vercel.app/)** — all API routes, Devnet attestation, Firecrawl research, ElevenLabs voice, and Supabase audit logs are active.
 
 <details>
 <summary><strong>Example analysis response</strong></summary>
@@ -465,7 +465,7 @@ A two-minute walkthrough for judges:
 | Asset support | Native SOL only | SPL Token and Token-2022 vaults |
 | Network | Devnet only | Mainnet review, audit, and operational key management |
 | Daily reset | Lazy reset on the next execution after 24 hours | Keeper or cron-assisted reset for precise windows |
-| API layer | Routes are scaffolded | Wire Firecrawl, RPC scorer, ElevenLabs, Supabase |
+| API layer | Live on Vercel (`https://solvox-app.vercel.app/`) | Add multi-attestor quorum & rate limiting |
 
 > [!NOTE]
 > SolVox is a hackathon reference implementation. The on-chain vault constraints are real. The attestor is a trusted component in this version, and the README says so on purpose.
@@ -480,9 +480,9 @@ A two-minute walkthrough for judges:
 | On-chain `TrustEntry` reads | Live |
 | Wallet connection (Phantom, Solflare) | Live |
 | Landing page and dashboard | Live |
-| Firecrawl and RPC analysis route | Scaffolded |
-| ElevenLabs voice routes | Scaffolded |
-| Supabase persistence | Scaffolded |
+| Firecrawl and RPC analysis route | Live |
+| ElevenLabs voice routes | Live |
+| Supabase persistence | Live |
 
 ## Roadmap
 

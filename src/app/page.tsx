@@ -34,11 +34,11 @@ const STATS: {
   mono?: boolean;
 }[] = [
   { label: "Program ID", value: "GQqU...RNjc", mono: true },
-  { label: "Vaults created", value: 128 },
-  { label: "Actions guarded", value: 1864, tick: 1 },
-  { label: "Trust grades issued", value: 642 },
-  { label: "SOL guarded", value: 41.5, decimals: 1 },
-  { label: "Receipts issued", value: 1864, tick: 1 },
+  { label: "On-chain PDAs", value: 3 },
+  { label: "Instructions", value: 6 },
+  { label: "Trust grades", value: "A–F" },
+  { label: "Asset", value: "Native SOL" },
+  { label: "Cluster", value: "Devnet" },
 ];
 
 const STEPS = [

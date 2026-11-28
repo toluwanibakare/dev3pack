@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL, PublicKey, Transaction } from "@solana/web3.js";
 import { CheckCircle2, ExternalLink, Send, ShieldBan } from "lucide-react";
-import { explorerTxUrl, truncateAddress } from "@/lib/constants";
+import { explorerAddressUrl, explorerTxUrl, truncateAddress } from "@/lib/constants";
+import { getTrustEntryPda } from "@/lib/pda";
 import { buildExecuteGuardedActionIx, resolveSolVoxTxError } from "@/lib/program";
 import { AnalysisResult, ReceiptLogItem } from "@/lib/types";
 import { speakText } from "@/lib/voice";
@@ -180,7 +181,9 @@ export function ExecutionFeedCard({
                   ) : (
                     <ShieldBan className="h-3.5 w-3.5" />
                   )}
-                  {r.status === "CONFIRMED" ? "CONFIRMED ON-CHAIN" : "BLOCKED ON-CHAIN"}
+                  {r.status === "CONFIRMED"
+                    ? "CONFIRMED ON-CHAIN"
+                    : "BLOCKED (ANCHOR PRE-FLIGHT)"}
                 </span>
                 <span className="font-mono text-zinc-200">{r.amountSol} SOL</span>
               </div>
@@ -191,7 +194,7 @@ export function ExecutionFeedCard({
 
               {r.errorReason && <p className="mt-1.5 text-red-200">{r.errorReason}</p>}
 
-              {r.txSignature && (
+              {r.txSignature ? (
                 <a
                   href={explorerTxUrl(r.txSignature)}
                   target="_blank"
@@ -200,6 +203,24 @@ export function ExecutionFeedCard({
                 >
                   Explorer: {truncateAddress(r.txSignature)} <ExternalLink className="h-3 w-3" />
                 </a>
+              ) : (
+                (() => {
+                  try {
+                    const [trustPda] = getTrustEntryPda(new PublicKey(r.targetWallet));
+                    return (
+                      <a
+                        href={explorerAddressUrl(trustPda.toBase58())}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 inline-flex items-center gap-1 font-mono text-[11px] text-red-300 hover:underline"
+                      >
+                        Inspect TrustEntry PDA on Explorer <ExternalLink className="h-3 w-3" />
+                      </a>
+                    );
+                  } catch {
+                    return null;
+                  }
+                })()
               )}
             </div>
           ))
