@@ -55,7 +55,7 @@ export async function analyzeProjectWebPresence(projectUrl: string): Promise<Fir
     const lowerContent = `${title} ${description} ${markdown}`.toLowerCase();
 
     // Check for documentation indicators (includes footer/nav links)
-    const hasDocs =
+    let hasDocs =
       lowerContent.includes("documentation") ||
       lowerContent.includes("docs.") ||
       lowerContent.includes("/docs") ||
@@ -65,7 +65,7 @@ export async function analyzeProjectWebPresence(projectUrl: string): Promise<Fir
       lowerContent.includes("gitbook");
 
     // Check for team, organization, or leadership footprint
-    const hasNamedTeam =
+    let hasNamedTeam =
       lowerContent.includes("team") ||
       lowerContent.includes("founders") ||
       lowerContent.includes("advisors") ||
@@ -75,7 +75,7 @@ export async function analyzeProjectWebPresence(projectUrl: string): Promise<Fir
       lowerContent.includes("core contributors");
 
     // Check for open-source repository or security/audits
-    const hasGithubOrAudit =
+    let hasGithubOrAudit =
       lowerContent.includes("github.com") ||
       lowerContent.includes("github") ||
       lowerContent.includes("audit") ||
@@ -83,6 +83,47 @@ export async function analyzeProjectWebPresence(projectUrl: string): Promise<Fir
       lowerContent.includes("open source") ||
       lowerContent.includes("certik") ||
       lowerContent.includes("ottersec");
+
+    const citations: { title: string; url: string }[] = [
+      { title: title.slice(0, 60), url: normalizedUrl },
+    ];
+
+    // If SPA landing page scrape missed docs/team/github, enrich with Firecrawl /v1/search
+    if (!hasDocs || !hasNamedTeam || !hasGithubOrAudit) {
+      try {
+        const hostname = new URL(normalizedUrl).hostname.replace(/^www\./, "");
+        const searchRes = await fetch("https://api.firecrawl.dev/v1/search", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: `${hostname} docs github audit team`,
+            limit: 4,
+          }),
+        });
+        if (searchRes.ok) {
+          const searchJson = await searchRes.json();
+          const results: Array<{ title?: string; url?: string; description?: string }> =
+            Array.isArray(searchJson?.data) ? searchJson.data : [];
+          for (const item of results) {
+            const hay = `${item.title || ""} ${item.url || ""} ${item.description || ""}`.toLowerCase();
+            if (hay.includes("doc") || hay.includes("developer") || hay.includes("guide")) hasDocs = true;
+            if (hay.includes("team") || hay.includes("about") || hay.includes("foundation") || hay.includes("blog")) hasNamedTeam = true;
+            if (hay.includes("github") || hay.includes("audit") || hay.includes("security")) hasGithubOrAudit = true;
+            if (item.url && !citations.some((c) => c.url === item.url)) {
+              citations.push({
+                title: (item.title || item.url).slice(0, 60),
+                url: item.url,
+              });
+            }
+          }
+        }
+      } catch {
+        // Non-blocking search enrichment fallback
+      }
+    }
 
     const suspiciousSignals: string[] = [];
     if (!hasDocs && !hasNamedTeam && !hasGithubOrAudit) {
@@ -101,17 +142,13 @@ export async function analyzeProjectWebPresence(projectUrl: string): Promise<Fir
       suspiciousSignals.push("High-risk promotional patterns (guaranteed returns / direct SOL presale claim prompts)");
     }
 
-    const citations: { title: string; url: string }[] = [
-      { title: title.slice(0, 60), url: normalizedUrl },
-    ];
-
     return {
       projectUrl: normalizedUrl,
       hasDocs,
       hasNamedTeam,
       hasGithubOrAudit,
       suspiciousSignals,
-      citations,
+      citations: citations.slice(0, 4),
       scrapedTitle: title,
       scrapedDescription: description,
     };
