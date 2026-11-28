@@ -157,7 +157,10 @@ function TimelineRow({
 
 export function ProfileRail({ vault }: { vault: PolicyVaultData | null }) {
   const { publicKey } = useWallet();
-  const address = publicKey?.toBase58() ?? "";
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const address = mounted && publicKey ? publicKey.toBase58() : "";
   const programReady = isProgramConfigured();
 
   const limit = vault ? Number(vault.dailySpendLimitLamports) / 1_000_000_000 : 0;
@@ -182,7 +185,11 @@ export function ProfileRail({ vault }: { vault: PolicyVaultData | null }) {
         </p>
 
         <div data-tour="wallet-connect" className="user-card-wallet mt-4">
-          <WalletMultiButton />
+          {mounted ? (
+            <WalletMultiButton />
+          ) : (
+            <div className="mx-auto h-10 w-36 rounded-full border border-white/10 bg-white/[0.04]" />
+          )}
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-2 text-left">

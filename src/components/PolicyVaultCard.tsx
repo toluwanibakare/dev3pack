@@ -11,7 +11,7 @@ import {
   buildUpdatePolicyIx,
   buildWithdrawVaultIx,
   fetchPolicyVault,
-  parseSolVoxError,
+  resolveSolVoxTxError,
 } from "@/lib/program";
 import { PolicyVaultData } from "@/lib/types";
 
@@ -65,15 +65,19 @@ export function PolicyVaultCard({ onVaultChange, refreshTrigger }: PolicyVaultCa
     setBusy(label);
     setError(null);
     setLastTx(null);
+    const tx = new Transaction();
     try {
       const ix = await buildIx();
-      const tx = new Transaction().add(ix);
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
+      tx.add(ix);
+      tx.feePayer = publicKey;
+      tx.recentBlockhash = blockhash;
       const sig = await sendTransaction(tx, connection);
-      await connection.confirmTransaction(sig, "confirmed");
+      await connection.confirmTransaction({ signature: sig, blockhash, lastValidBlockHeight }, "confirmed");
       setLastTx(sig);
       await loadVault();
     } catch (err) {
-      setError(parseSolVoxError(err));
+      setError(await resolveSolVoxTxError(connection, tx, err));
     } finally {
       setBusy(null);
     }

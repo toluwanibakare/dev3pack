@@ -5,7 +5,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL, PublicKey, Transaction } from "@solana/web3.js";
 import { CheckCircle2, ExternalLink, Send, ShieldBan } from "lucide-react";
 import { explorerTxUrl, truncateAddress } from "@/lib/constants";
-import { buildExecuteGuardedActionIx, parseSolVoxError } from "@/lib/program";
+import { buildExecuteGuardedActionIx, resolveSolVoxTxError } from "@/lib/program";
 import { AnalysisResult, ReceiptLogItem } from "@/lib/types";
 import { speakText } from "@/lib/voice";
 
@@ -72,6 +72,7 @@ export function ExecutionFeedCard({
     const amountNum = Number(amountSol);
     const gradeLabel = analysis?.grade || "?";
 
+    const tx = new Transaction();
     try {
       const targetPk = new PublicKey(targetWallet.trim());
       const nonce = BigInt(Date.now());
@@ -82,9 +83,12 @@ export function ExecutionFeedCard({
         BigInt(Math.round(amountNum * LAMPORTS_PER_SOL)),
         nonce
       );
-      const tx = new Transaction().add(ix);
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
+      tx.add(ix);
+      tx.feePayer = publicKey;
+      tx.recentBlockhash = blockhash;
       const sig = await sendTransaction(tx, connection);
-      await connection.confirmTransaction(sig, "confirmed");
+      await connection.confirmTransaction({ signature: sig, blockhash, lastValidBlockHeight }, "confirmed");
 
       await logReceipt({
         id: String(nonce),
@@ -99,7 +103,7 @@ export function ExecutionFeedCard({
       void speakText(`Transfer of ${amountNum} SOL confirmed on Solana Devnet.`);
       onExecuted?.();
     } catch (err) {
-      const reason = parseSolVoxError(err);
+      const reason = await resolveSolVoxTxError(connection, tx, err);
       await logReceipt({
         id: String(Date.now()),
         targetWallet: targetWallet.trim(),

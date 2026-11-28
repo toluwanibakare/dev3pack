@@ -2,6 +2,7 @@ import {
   Connection,
   PublicKey,
   SystemProgram,
+  Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
 import { SOLVOX_PROGRAM_ID } from "./constants";
@@ -233,4 +234,39 @@ export function parseSolVoxError(err: unknown): string {
     return "AccountNotInitialized: Target wallet has no on-chain TrustEntry yet. Click 'Verify & Attest Grade' first.";
   }
   return msg;
+}
+
+/**
+ * Simulates a failed transaction when a wallet adapter throws a generic error
+ * (e.g. Phantom's "Unexpected error") so exact Anchor program logs are surfaced.
+ */
+export async function resolveSolVoxTxError(
+  connection: Connection,
+  tx: Transaction,
+  err: unknown
+): Promise<string> {
+  const initial = parseSolVoxError(err);
+  const raw = err instanceof Error ? err.message : String(err);
+  if (
+    initial !== raw ||
+    raw.toLowerCase().includes("rejected") ||
+    raw.toLowerCase().includes("cancelled")
+  ) {
+    return initial;
+  }
+
+  try {
+    const sim = await connection.simulateTransaction(tx);
+    const logs = sim.value.logs?.join("\n") || "";
+    const simErr = sim.value.err ? JSON.stringify(sim.value.err) : "";
+    const combined = `${logs}\n${simErr}`.trim();
+    if (combined) {
+      const parsed = parseSolVoxError(new Error(combined));
+      if (parsed !== combined) return parsed;
+      return simErr ? `Simulation failed: ${simErr}` : initial;
+    }
+  } catch {
+    // Fall back to initial error if simulation itself cannot run
+  }
+  return initial;
 }
