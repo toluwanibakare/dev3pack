@@ -36,7 +36,7 @@ export async function analyzeProjectWebPresence(projectUrl: string): Promise<Fir
       body: JSON.stringify({
         url: normalizedUrl,
         formats: ["markdown"],
-        onlyMainContent: true,
+        onlyMainContent: false,
       }),
     });
 
@@ -52,37 +52,52 @@ export async function analyzeProjectWebPresence(projectUrl: string): Promise<Fir
     const title = metadata?.title || "Project Home";
     const description = metadata?.description || "";
 
-    const lowerContent = markdown.toLowerCase();
+    const lowerContent = `${title} ${description} ${markdown}`.toLowerCase();
 
-    // Check for documentation indicators
+    // Check for documentation indicators (includes footer/nav links)
     const hasDocs =
       lowerContent.includes("documentation") ||
+      lowerContent.includes("docs.") ||
+      lowerContent.includes("/docs") ||
       lowerContent.includes("docs") ||
+      lowerContent.includes("developers") ||
       lowerContent.includes("whitepaper") ||
       lowerContent.includes("gitbook");
 
-    // Check for team or leadership
+    // Check for team, organization, or leadership footprint
     const hasNamedTeam =
       lowerContent.includes("team") ||
       lowerContent.includes("founders") ||
       lowerContent.includes("advisors") ||
+      lowerContent.includes("about") ||
+      lowerContent.includes("careers") ||
+      lowerContent.includes("foundation") ||
       lowerContent.includes("core contributors");
 
-    // Check for open-source repository or audits
+    // Check for open-source repository or security/audits
     const hasGithubOrAudit =
       lowerContent.includes("github.com") ||
+      lowerContent.includes("github") ||
       lowerContent.includes("audit") ||
       lowerContent.includes("security") ||
+      lowerContent.includes("open source") ||
       lowerContent.includes("certik") ||
       lowerContent.includes("ottersec");
 
     const suspiciousSignals: string[] = [];
-    if (!hasDocs) suspiciousSignals.push("No technical documentation or whitepaper discovered on project domain");
-    if (!hasNamedTeam) suspiciousSignals.push("No named team members, founders, or verifiable identities found");
-    if (!hasGithubOrAudit) suspiciousSignals.push("No verified public GitHub repository or third-party audit referenced");
+    if (!hasDocs && !hasNamedTeam && !hasGithubOrAudit) {
+      suspiciousSignals.push(
+        "No public documentation, team footprint, GitHub repository, or security audit linked on site"
+      );
+    }
 
     // Check for explicit scam/hype triggers
-    if (lowerContent.includes("guaranteed 100x") || lowerContent.includes("presale send sol") || lowerContent.includes("airdrop claim")) {
+    if (
+      lowerContent.includes("guaranteed 100x") ||
+      lowerContent.includes("presale send sol") ||
+      lowerContent.includes("airdrop claim") ||
+      lowerContent.includes("connect wallet to claim")
+    ) {
       suspiciousSignals.push("High-risk promotional patterns (guaranteed returns / direct SOL presale claim prompts)");
     }
 

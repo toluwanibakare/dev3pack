@@ -31,7 +31,7 @@ export function computeTrustGrade(
     redFlags.push(
       `Wash-loop detected: ${(washLoop.reciprocalRatio * 100).toFixed(0)}% circular ping-pong transfer ratio across ${washLoop.uniqueCounterparties} counterparty`
     );
-  } else if (washLoop.reciprocalRatio > 0.5) {
+  } else if (washLoop.txCount >= 4 && washLoop.reciprocalRatio > 0.5) {
     score -= 20;
     redFlags.push(`Elevated reciprocal transfer concentration (${(washLoop.reciprocalRatio * 100).toFixed(0)}%)`);
   }
